@@ -12,7 +12,7 @@ public class StudentListRvViewModel extends ViewModel {
     LiveData<List<Student>> data;
 
     public StudentListRvViewModel(){
-        data = Model.instance.getAll();
+//        data = Model.instance.getAll();
     }
     public LiveData<List<Student>> getData() {
         return data;

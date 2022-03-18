@@ -21,6 +21,11 @@ public class Model {
     public Executor executor = Executors.newFixedThreadPool(1);
     public Handler mainThread = HandlerCompat.createAsync(Looper.getMainLooper());
 
+    ModelFirebase modelFirebase = new ModelFirebase();
+
+    private Model() {
+        restaurantListLoadingState.setValue(RestaurantListLoadingState.loaded);
+    }
 
     public interface GetUserLoginListener {
         void onComplete(User user);
@@ -29,7 +34,6 @@ public class Model {
     public void getUserLogin(String mail, String password, GetUserLoginListener listener) {
         modelFirebase.getUserLogin(mail, password, listener);
     }
-
 
     public interface AddListener {
         void onComplete();
@@ -40,78 +44,73 @@ public class Model {
             listener.onComplete();
         });
     }
-//--------------------------------------------------------------------------------------------------
 
-    public enum StudentListLoadingState {
+    public enum RestaurantListLoadingState {
         loading,
         loaded
     }
 
-    MutableLiveData<StudentListLoadingState> studentListLoadingState = new MutableLiveData<StudentListLoadingState>();
+    MutableLiveData<RestaurantListLoadingState> restaurantListLoadingState = new MutableLiveData<RestaurantListLoadingState>();
 
-    public LiveData<StudentListLoadingState> getStudentListLoadingState() {
-        return studentListLoadingState;
+    public LiveData<RestaurantListLoadingState> getRestaurantListLoadingState() {
+        return restaurantListLoadingState;
     }
 
-    ModelFirebase modelFirebase = new ModelFirebase();
+    MutableLiveData<List<Restaurant>> restaurantList = new MutableLiveData<List<Restaurant>>();
 
-    private Model() {
-        studentListLoadingState.setValue(StudentListLoadingState.loaded);
-    }
-
-    MutableLiveData<List<Student>> studentsList = new MutableLiveData<List<Student>>();
-
-    public LiveData<List<Student>> getAll() {
-        if (studentsList.getValue() == null) {
-            refreshStudentList();
+    public LiveData<List<Restaurant>> getAll() {
+        if (restaurantList.getValue() == null) {
+            refreshRestaurantList();
         }
 
-        return studentsList;
+        return restaurantList;
     }
 
-    public void refreshStudentList() {
-        studentListLoadingState.setValue(StudentListLoadingState.loading);
+    public void refreshRestaurantList() {
+        restaurantListLoadingState.setValue(RestaurantListLoadingState.loading);
 
         // get last local update date
-        Long lastUpdateDate = MyApplication.getContext().getSharedPreferences("TAG", Context.MODE_PRIVATE).getLong("StudentsLastUpdateDate", 0);
+        Long lastUpdateDate = MyApplication.getContext().getSharedPreferences("TAG", Context.MODE_PRIVATE).getLong("RestaurantsLastUpdateDate", 0);
 
         executor.execute(() -> {
-            List<Student> stList = AppLocalDb.db.studentDao().getAll();
-            studentsList.postValue(stList);
+            List<Restaurant> stList = AppLocalDb.db.restaurantDao().getAll();
+            restaurantList.postValue(stList);
         });
 
         // firebase get all updates since lastLocalUpdateDate
-        modelFirebase.getAllStudents(lastUpdateDate, new ModelFirebase.GetAllStudentsListener() {
+        modelFirebase.getAllRestaurants(lastUpdateDate, new ModelFirebase.GetAllRestaurantsListener() {
             @Override
-            public void onComplete(List<Student> list) {
+            public void onComplete(List<Restaurant> list) {
                 // add all records to the local db
                 executor.execute(new Runnable() {
                     @Override
                     public void run() {
                         Long lud = new Long(0);
                         Log.d("TAG", "fb returned " + list.size());
-                        for (Student student : list) {
-                            AppLocalDb.db.studentDao().insertAll(student);
-                            if (lud < student.getUpdateDate()) {
-                                lud = student.getUpdateDate();
+                        for (Restaurant restaurant : list) {
+//                            AppLocalDb.db.studentDao().insertAll(student);
+                            if (lud < restaurant.getUpdateDate()) {
+                                lud = restaurant.getUpdateDate();
                             }
                         }
                         // update last local update date
                         MyApplication.getContext()
                                 .getSharedPreferences("TAG", Context.MODE_PRIVATE)
                                 .edit()
-                                .putLong("StudentsLastUpdateDate", lud)
+                                .putLong("RestaurantsLastUpdateDate", lud)
                                 .commit();
 
                         //return all data to caller
-                        List<Student> stList = AppLocalDb.db.studentDao().getAll();
-                        studentsList.postValue(stList);
-                        studentListLoadingState.postValue(StudentListLoadingState.loaded);
+                        List<Restaurant> stList = AppLocalDb.db.restaurantDao().getAll();
+                        restaurantList.postValue(stList);
+                        restaurantListLoadingState.postValue(RestaurantListLoadingState.loaded);
                     }
                 });
             }
         });
     }
+
+//--------------------------------------------------------------------------------------------------
 
     public interface AddStudentListener {
         void onComplete();
@@ -120,7 +119,7 @@ public class Model {
     public void addStudent(Student student, AddStudentListener listener) {
         modelFirebase.addStudent(student, () -> {
             listener.onComplete();
-            refreshStudentList();
+            refreshRestaurantList();
         });
     }
 
@@ -140,6 +139,18 @@ public class Model {
 
     public void saveUserImage(Bitmap imageBitmap, String imageName, SaveImageListener listener) {
         modelFirebase.saveImage(imageBitmap, "user_avatars/", imageName, listener);
+    }
+
+    public void saveRestaurantImage(Bitmap imageBitmap, String imageName, SaveImageListener listener) {
+        modelFirebase.saveImage(imageBitmap, "restaurant_images/", imageName, listener);
+    }
+
+    public void saveReviewImage(Bitmap imageBitmap, String imageName, SaveImageListener listener) {
+        modelFirebase.saveImage(imageBitmap, "review_images/", imageName, listener);
+    }
+
+    public void saveRestaurantTypeImage(Bitmap imageBitmap, String imageName, SaveImageListener listener) {
+        modelFirebase.saveImage(imageBitmap, "types_images/", imageName, listener);
     }
 
     /**

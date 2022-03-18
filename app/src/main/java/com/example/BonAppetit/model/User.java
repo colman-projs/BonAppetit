@@ -16,7 +16,7 @@ public class User {
 
     @PrimaryKey(autoGenerate = true)
     @NonNull
-    String id = "";
+    int id;
     String mail = "";
     String password = "";
     String firstName = "";
@@ -25,7 +25,7 @@ public class User {
     boolean deleted = false;
     Long updateDate = new Long(0);
 
-    public User(){}
+    public User() {}
     public User(String mail, String password, String firstName, String lastName) {
         this.mail = mail;
         this.password = password;
@@ -34,11 +34,11 @@ public class User {
     }
 
     @NonNull
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(@NonNull String id) {
+    public void setId(@NonNull int id) {
         this.id = id;
     }
 
@@ -112,7 +112,7 @@ public class User {
     }
 
     public static User create(Map<String, Object> json) {
-        String id = (String) json.get("id");
+        int id = (int) json.get("id");
         String mail = (String) json.get("mail");
         String password = (String) json.get("password");
         String firstName = (String)json.get("firstName");

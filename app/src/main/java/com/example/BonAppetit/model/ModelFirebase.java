@@ -66,6 +66,28 @@ public class ModelFirebase {
                 .addOnFailureListener(e -> listener.onComplete());
     }
 
+    public interface GetAllRestaurantsListener{
+        void onComplete(List<Restaurant> list);
+    }
+
+    public void getAllRestaurants(Long lastUpdateDate, GetAllRestaurantsListener listener) {
+        db.collection(Restaurant.COLLECTION_NAME)
+                .whereGreaterThanOrEqualTo("updateDate",new Timestamp(lastUpdateDate,0))
+                .get()
+                .addOnCompleteListener(task -> {
+                    List<Restaurant> list = new LinkedList<Restaurant>();
+                    if (task.isSuccessful()){
+                        for (QueryDocumentSnapshot doc : task.getResult()){
+                            Restaurant restaurant = Restaurant.create(doc.getData());
+                            if (restaurant != null){
+                                list.add(restaurant);
+                            }
+                        }
+                    }
+                    listener.onComplete(list);
+                });
+    }
+
 
     public interface GetAllStudentsListener{
         void onComplete(List<Student> list);
