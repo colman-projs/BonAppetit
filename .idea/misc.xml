@@ -3,17 +3,24 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Projects/Android/BonAppetit/app/src/main/res/layout/activity_base.xml" value="0.1" />
-        <entry key="..\:/Projects/Android/BonAppetit/app/src/main/res/layout/activity_login.xml" value="0.1" />
-        <entry key="..\:/Projects/Android/BonAppetit/app/src/main/res/layout/fragment_about.xml" value="0.1" />
-        <entry key="..\:/Projects/Android/BonAppetit/app/src/main/res/layout/fragment_add_student.xml" value="0.1" />
-        <entry key="..\:/Projects/Android/BonAppetit/app/src/main/res/layout/fragment_maps.xml" value="0.1" />
-        <entry key="..\:/Projects/Android/BonAppetit/app/src/main/res/layout/fragment_student_details.xml" value="0.1" />
-        <entry key="..\:/Projects/Android/BonAppetit/app/src/main/res/layout/fragment_students_list.xml" value="0.1" />
-        <entry key="..\:/Projects/Android/BonAppetit/app/src/main/res/menu/base_menu.xml" value="0.15185185185185185" />
-        <entry key="..\:/Projects/Android/BonAppetit/app/src/main/res/menu/login_menu.xml" value="0.15185185185185185" />
-        <entry key="..\:/Projects/Android/BonAppetit/app/src/main/res/menu/map_menu.xml" value="0.1796875" />
-        <entry key="..\:/Projects/Android/BonAppetit/app/src/main/res/menu/student_list_menu.xml" value="0.15185185185185185" />
+        <entry key="..\:/Users/-/.android/studio/Projects/BonAppetit/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.14739583333333334" />
+        <entry key="..\:/Users/-/.android/studio/Projects/BonAppetit/app/src/main/res/drawable/ic_launcher_background.xml" value="0.14739583333333334" />
+        <entry key="..\:/Users/-/.android/studio/Projects/BonAppetit/app/src/main/res/drawable/logo_background.xml" value="0.14635416666666667" />
+        <entry key="..\:/Users/-/.android/studio/Projects/BonAppetit/app/src/main/res/layout/activity_base.xml" value="0.13020833333333334" />
+        <entry key="..\:/Users/-/.android/studio/Projects/BonAppetit/app/src/main/res/layout/activity_intro.xml" value="0.1" />
+        <entry key="..\:/Users/-/.android/studio/Projects/BonAppetit/app/src/main/res/layout/activity_login.xml" value="0.13020833333333334" />
+        <entry key="..\:/Users/-/.android/studio/Projects/BonAppetit/app/src/main/res/layout/fragment_about.xml" value="0.13020833333333334" />
+        <entry key="..\:/Users/-/.android/studio/Projects/BonAppetit/app/src/main/res/layout/fragment_add_student.xml" value="0.13020833333333334" />
+        <entry key="..\:/Users/-/.android/studio/Projects/BonAppetit/app/src/main/res/layout/fragment_login.xml" value="0.264" />
+        <entry key="..\:/Users/-/.android/studio/Projects/BonAppetit/app/src/main/res/layout/fragment_maps.xml" value="0.13020833333333334" />
+        <entry key="..\:/Users/-/.android/studio/Projects/BonAppetit/app/src/main/res/layout/fragment_student_details.xml" value="0.13020833333333334" />
+        <entry key="..\:/Users/-/.android/studio/Projects/BonAppetit/app/src/main/res/layout/fragment_students_list.xml" value="0.13020833333333334" />
+        <entry key="..\:/Users/-/.android/studio/Projects/BonAppetit/app/src/main/res/layout/student_list_row.xml" value="0.13020833333333334" />
+        <entry key="..\:/Users/-/.android/studio/Projects/BonAppetit/app/src/main/res/menu/base_menu.xml" value="0.2" />
+        <entry key="..\:/Users/-/.android/studio/Projects/BonAppetit/app/src/main/res/menu/login_menu.xml" value="0.13020833333333334" />
+        <entry key="..\:/Users/-/.android/studio/Projects/BonAppetit/app/src/main/res/menu/student_list_menu.xml" value="0.13020833333333334" />
+        <entry key="..\:/Users/-/.android/studio/Projects/BonAppetit/app/src/main/res/mipmap-anydpi-v26/food_placeholder.xml" value="0.14635416666666667" />
+        <entry key="..\:/Users/-/.android/studio/Projects/BonAppetit/app/src/main/res/mipmap-anydpi-v26/logo.xml" value="0.14635416666666667" />
         <entry key="app/src/main/res/layout/activity_base.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_intro.xml" value="0.21510416666666668" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.21510416666666668" />
