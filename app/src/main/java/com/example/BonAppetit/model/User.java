@@ -14,7 +14,7 @@ import java.util.Map;
 public class User {
     final public static String COLLECTION_NAME = "users";
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     @NonNull
     String id = "";
     String mail = "";

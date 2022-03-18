@@ -22,6 +22,26 @@ public class Model {
     public Handler mainThread = HandlerCompat.createAsync(Looper.getMainLooper());
 
 
+    public interface GetUserLoginListener {
+        void onComplete(User user);
+    }
+
+    public void getUserLogin(String mail, String password, GetUserLoginListener listener) {
+        modelFirebase.getUserLogin(mail, password, listener);
+    }
+
+
+    public interface AddListener {
+        void onComplete();
+    }
+
+    public void registerUser(User user, AddListener listener) {
+        modelFirebase.registerUser(user, () -> {
+            listener.onComplete();
+        });
+    }
+//--------------------------------------------------------------------------------------------------
+
     public enum StudentListLoadingState {
         loading,
         loaded
@@ -45,7 +65,7 @@ public class Model {
         if (studentsList.getValue() == null) {
             refreshStudentList();
         }
-        ;
+
         return studentsList;
     }
 
@@ -108,9 +128,9 @@ public class Model {
         void onComplete(Student student);
     }
 
-    public Student getStudentById(String studentId, GetStudentById listener) {
+    public void getStudentById(String studentId, GetStudentById listener) {
         modelFirebase.getStudentById(studentId, listener);
-        return null;
+//        return null;
     }
 
 
@@ -118,8 +138,8 @@ public class Model {
         void onComplete(String url);
     }
 
-    public void saveImage(Bitmap imageBitmap, String imageName, SaveImageListener listener) {
-        modelFirebase.saveImage(imageBitmap, imageName, listener);
+    public void saveUserImage(Bitmap imageBitmap, String imageName, SaveImageListener listener) {
+        modelFirebase.saveImage(imageBitmap, "user_avatars/", imageName, listener);
     }
 
     /**

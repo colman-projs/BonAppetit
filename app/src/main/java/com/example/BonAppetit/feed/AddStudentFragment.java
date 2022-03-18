@@ -109,7 +109,7 @@ public class AddStudentFragment extends Fragment {
                 Navigation.findNavController(nameEt).navigateUp();
             });
         }else{
-            Model.instance.saveImage(imageBitmap, id + ".jpg", url -> {
+            Model.instance.saveUserImage(imageBitmap, id + ".jpg", url -> {
                 student.setAvatarUrl(url);
                 Model.instance.addStudent(student,()->{
                     Navigation.findNavController(nameEt).navigateUp();
