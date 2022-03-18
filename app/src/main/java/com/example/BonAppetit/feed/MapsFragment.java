@@ -2,8 +2,12 @@ package com.example.BonAppetit.feed;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,12 +18,19 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.example.BonAppetit.R;
 
 import java.util.ArrayList;
 
 public class MapsFragment extends Fragment {
+
+    private boolean locationPermissionGranted;
+    private static final int DEFAULT_ZOOM = 15;
+    private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
+
+    //TODO: Get resturants details and put in in the map.
 
     // below are the latitude and longitude
     // of 4 different locations.,,
@@ -50,12 +61,7 @@ public class MapsFragment extends Fragment {
             // locations in our array list.
             locationArrayList.add(carmel_market);
             locationArrayList.add(vitrina_tel_aviv);
-//            locationArrayList.add(NewCastle);
-//            locationArrayList.add(Brisbane);
 
-//            LatLng sydney = new LatLng(-34, 151);
-//            googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-//            googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
 
             for (int i = 0; i < locationArrayList.size(); i++) {
 
@@ -68,6 +74,12 @@ public class MapsFragment extends Fragment {
                 // below line is use to move our camera to the specific location.
                 googleMap.moveCamera(CameraUpdateFactory.newLatLng(locationArrayList.get(i)));
             }
+
+            getLocationPermission();
+            googleMap.setOnMarkerClickListener((e)->{
+                setOnMarkerClickListener(e);
+                return true;
+            });
         }
     };
 
@@ -88,4 +100,28 @@ public class MapsFragment extends Fragment {
             mapFragment.getMapAsync(callback);
         }
     }
+
+
+    private void getLocationPermission() {
+        /*
+         * Request location permission, so that we can get the location of the
+         * device. The result of the permission request is handled by a callback,
+         * onRequestPermissionsResult.
+         */
+        if (ContextCompat.checkSelfPermission(this.getContext(),
+                android.Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            locationPermissionGranted = true;
+        } else {
+            ActivityCompat.requestPermissions(getActivity(),
+                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                    PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+        }
+    }
+
+    // TODO: intent to resturant details
+    public void setOnMarkerClickListener(Marker mark){
+
+    }
+
 }
