@@ -42,14 +42,14 @@ public class AddStudentFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_add_student,container, false);
-        nameEt = view.findViewById(R.id.main_name_et);
+        nameEt = view.findViewById(R.id.review_review_txt);
         idEt = view.findViewById(R.id.main_id_et);
         cb = view.findViewById(R.id.main_cb);
         saveBtn = view.findViewById(R.id.main_save_btn);
         cancelBtn = view.findViewById(R.id.main_cancel_btn);
         progressBar = view.findViewById(R.id.main_progressbar);
         progressBar.setVisibility(View.GONE);
-        avatarImv = view.findViewById(R.id.main_avatar_imv);
+        avatarImv = view.findViewById(R.id.review_user_img);
 
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
