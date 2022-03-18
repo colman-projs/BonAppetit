@@ -3,6 +3,15 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Projects/Android/BonAppetit/app/src/main/res/layout/activity_base.xml" value="0.1" />
+        <entry key="..\:/Projects/Android/BonAppetit/app/src/main/res/layout/activity_login.xml" value="0.1" />
+        <entry key="..\:/Projects/Android/BonAppetit/app/src/main/res/layout/fragment_about.xml" value="0.1" />
+        <entry key="..\:/Projects/Android/BonAppetit/app/src/main/res/layout/fragment_add_student.xml" value="0.1" />
+        <entry key="..\:/Projects/Android/BonAppetit/app/src/main/res/layout/fragment_maps.xml" value="0.1" />
+        <entry key="..\:/Projects/Android/BonAppetit/app/src/main/res/layout/fragment_student_details.xml" value="0.1" />
+        <entry key="..\:/Projects/Android/BonAppetit/app/src/main/res/menu/base_menu.xml" value="0.15185185185185185" />
+        <entry key="..\:/Projects/Android/BonAppetit/app/src/main/res/menu/login_menu.xml" value="0.15185185185185185" />
+        <entry key="..\:/Projects/Android/BonAppetit/app/src/main/res/menu/student_list_menu.xml" value="0.15185185185185185" />
         <entry key="app/src/main/res/layout/activity_base.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_intro.xml" value="0.21510416666666668" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.21510416666666668" />
