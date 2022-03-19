@@ -32,11 +32,11 @@
 
 <!--    To Add Student-->
     <fragment
-        android:id="@+id/addStudentFragment"
+        android:id="@+id/addReviewFragment"
         android:name="com.example.BonAppetit.feed.AddStudentFragment"
         android:label="Add New Review"
         tools:layout="@layout/fragment_add_student" />
-    <action android:id="@+id/action_global_addStudentFragment" app:destination="@id/addStudentFragment" />
+    <action android:id="@+id/action_global_addStudentFragment" app:destination="@id/addReviewFragment" />
 
 <!--    ToMap-->
     <fragment
@@ -52,6 +52,12 @@
     <fragment
         android:id="@+id/restaurantListRvFragment"
         android:name="com.example.BonAppetit.feed.RestaurantListRvFragment"
-        android:label="fragment_restaurants_list"
+        android:label="Restaurants"
         tools:layout="@layout/fragment_restaurants_list" />
+    <fragment
+        android:id="@+id/addRestaurantFragment"
+        android:name="com.example.BonAppetit.feed.AddRestaurantFragment"
+        android:label="Add New Restaurant"
+        tools:layout="@layout/fragment_add_restaurant" />
+    <action android:id="@+id/action_global_addRestaurantFragment" app:destination="@id/addRestaurantFragment" />
 </navigation>

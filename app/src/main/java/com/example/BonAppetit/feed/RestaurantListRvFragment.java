@@ -9,7 +9,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -56,8 +55,8 @@ public class RestaurantListRvFragment extends Fragment {
         adapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(View v,int position) {
-                int stId = viewModel.getData().getValue().get(position).getId();
-//                Navigation.findNavController(v).navigate(StudentListRvFragmentDirections.actionStudentListRvFragmentToStudentDetailsFragment(stId));
+                String stId = viewModel.getData().getValue().get(position).getId();
+//                Navigation.findNavController(v).navigate(RestaurantListRvFragmentDirections.actionRestaurantListRvFragmentToRestaurantDetailsFragment(stId));
 
             }
         });
@@ -81,17 +80,13 @@ public class RestaurantListRvFragment extends Fragment {
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder{
-        ImageView avatarImv;
+        ImageView imageImv;
         TextView nameTv;
-//        TextView idTv;
-//        CheckBox cb;
 
         public MyViewHolder(@NonNull View itemView, OnItemClickListener listener) {
             super(itemView);
             nameTv = itemView.findViewById(R.id.listrow_name_tv);
-//            idTv = itemView.findViewById(R.id.listrow_id_tv);
-//            cb = itemView.findViewById(R.id.listrow_cb);
-            avatarImv = itemView.findViewById(R.id.listrow_avatar_imv);
+            imageImv = itemView.findViewById(R.id.restaurant_listrow_image_imv);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -104,13 +99,11 @@ public class RestaurantListRvFragment extends Fragment {
 
         void bind(Restaurant restaurant){
             nameTv.setText(restaurant.getName());
-//            idTv.setText(student.getId());
-//            cb.setChecked(student.isFlag());
-            avatarImv.setImageResource(R.drawable.avatar);
+            imageImv.setImageResource(R.drawable.avatar);
             if (restaurant.getImageUrl() != null) {
                 Picasso.get()
                         .load(restaurant.getImageUrl())
-                        .into(avatarImv);
+                        .into(imageImv);
             }
         }
     }
@@ -151,12 +144,12 @@ public class RestaurantListRvFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.student_list_menu,menu);
+        inflater.inflate(R.menu.restaurant_list_menu,menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.addStudentFragment){
+        if (item.getItemId() == R.id.addRestaurantFragment){
             Log.d("TAG","ADD...");
             return true;
         }else {
