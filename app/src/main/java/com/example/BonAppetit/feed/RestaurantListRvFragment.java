@@ -82,10 +82,12 @@ public class RestaurantListRvFragment extends Fragment {
     class MyViewHolder extends RecyclerView.ViewHolder{
         ImageView imageImv;
         TextView nameTv;
+        TextView descTv;
 
         public MyViewHolder(@NonNull View itemView, OnItemClickListener listener) {
             super(itemView);
             nameTv = itemView.findViewById(R.id.listrow_name_tv);
+            descTv = itemView.findViewById(R.id.listrow_desc_tv);
             imageImv = itemView.findViewById(R.id.restaurant_listrow_image_imv);
 
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -99,7 +101,8 @@ public class RestaurantListRvFragment extends Fragment {
 
         void bind(Restaurant restaurant){
             nameTv.setText(restaurant.getName());
-            imageImv.setImageResource(R.drawable.avatar);
+            descTv.setText(restaurant.getDescription());
+            imageImv.setImageResource(R.mipmap.food_placeholder);
             if (restaurant.getImageUrl() != null) {
                 Picasso.get()
                         .load(restaurant.getImageUrl())

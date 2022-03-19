@@ -88,7 +88,7 @@ public class Model {
                         Long lud = new Long(0);
                         Log.d("TAG", "fb returned " + list.size());
                         for (Restaurant restaurant : list) {
-//                            AppLocalDb.db.studentDao().insertAll(student);
+                            AppLocalDb.db.restaurantDao().insertAll(restaurant);
                             if (lud < restaurant.getUpdateDate()) {
                                 lud = restaurant.getUpdateDate();
                             }
@@ -117,7 +117,7 @@ public class Model {
         });
     }
 
-    public void updateRestaurant(Restaurant restaurant, AddStudentListener listener) {
+    public void updateRestaurant(Restaurant restaurant, AddListener listener) {
         modelFirebase.updateRestaurant(restaurant, () -> {
             listener.onComplete();
             refreshRestaurantList();
