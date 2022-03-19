@@ -62,6 +62,15 @@ public class ModelFirebase {
                 });
     }
 
+    public void getIfUserExists(String email, Model.GetUserExistsListener listener) {
+        db.collection(User.COLLECTION_NAME)
+                .whereEqualTo("mail", email)
+                .get()
+                .addOnCompleteListener( task -> {
+                    listener.onComplete(task.isSuccessful() & task.getResult()!= null);
+                });
+    }
+
     public void registerUser(User user, Model.AddListener listener) {
         Map<String, Object> json = user.toJson();
         db.collection(User.COLLECTION_NAME)
