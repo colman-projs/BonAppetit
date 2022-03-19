@@ -46,7 +46,9 @@
         tools:layout="@layout/fragment_maps" />
 
 
-    <action android:id="@+id/action_global_MapsFragment" app:destination="@id/map" />
+    <action
+        android:id="@+id/action_global_MapsFragment"
+        app:destination="@id/MapFragment" />
     <fragment
         android:id="@+id/restaurantListRvFragment"
         android:name="com.example.BonAppetit.feed.RestaurantListRvFragment"
