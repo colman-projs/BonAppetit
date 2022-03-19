@@ -110,6 +110,20 @@ public class Model {
         });
     }
 
+    public void addRestaurant(Restaurant restaurant, AddListener listener) {
+        modelFirebase.addRestaurant(restaurant, () -> {
+            listener.onComplete();
+            refreshRestaurantList();
+        });
+    }
+
+    public void updateRestaurant(Restaurant restaurant, AddStudentListener listener) {
+        modelFirebase.updateRestaurant(restaurant, () -> {
+            listener.onComplete();
+            refreshRestaurantList();
+        });
+    }
+
 //--------------------------------------------------------------------------------------------------
 
     public interface AddStudentListener {

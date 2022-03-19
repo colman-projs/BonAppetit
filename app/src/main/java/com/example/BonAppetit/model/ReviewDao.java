@@ -24,7 +24,7 @@ public interface ReviewDao {
     long insert(Review review);
 
     @Query("select id from Review where ROWID = :rowid")
-    int getIdByRowid(long rowid);
+    String getIdByRowid(long rowid);
 
     @Delete
     void delete(Review review);

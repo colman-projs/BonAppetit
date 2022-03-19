@@ -1,5 +1,7 @@
 package com.example.BonAppetit.model;
 
+import static java.lang.Integer.parseInt;
+
 import android.graphics.Bitmap;
 import android.net.Uri;
 
@@ -11,6 +13,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
@@ -25,6 +28,7 @@ import java.io.ByteArrayOutputStream;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Future;
 
 public class ModelFirebase {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -88,6 +92,24 @@ public class ModelFirebase {
                 });
     }
 
+    public void addRestaurant(Restaurant restaurant, Model.AddListener listener) {
+        DocumentReference documentReference = db.collection(Restaurant.COLLECTION_NAME)
+            .document();
+        restaurant.setId(documentReference.getId());
+        Map<String, Object> json = restaurant.toJson();
+        documentReference.set(json)
+            .addOnSuccessListener(unused -> listener.onComplete())
+            .addOnFailureListener(e -> listener.onComplete());
+    }
+
+    public void updateRestaurant(Restaurant restaurant, Model.AddStudentListener listener) {
+        Map<String, Object> json = restaurant.toJson();
+        db.collection(Restaurant.COLLECTION_NAME)
+                .document(restaurant.getId())
+                .set(json)
+                .addOnSuccessListener(unused -> listener.onComplete())
+                .addOnFailureListener(e -> listener.onComplete());
+    }
 
     public interface GetAllStudentsListener{
         void onComplete(List<Student> list);

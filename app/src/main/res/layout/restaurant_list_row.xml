@@ -18,7 +18,7 @@
         android:layout_height="wrap_content">
 
         <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/listrow_avatar_imv"
+            android:id="@+id/restaurant_listrow_image_imv"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_marginStart="8dp"
@@ -39,7 +39,7 @@
             android:layout_marginStart="8dp"
             android:text="TextView"
             android:textSize="30sp"
-            app:layout_constraintStart_toEndOf="@+id/listrow_avatar_imv"
+            app:layout_constraintStart_toEndOf="@+id/restaurant_listrow_image_imv"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

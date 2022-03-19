@@ -24,7 +24,7 @@ public interface UserDao {
     long insert(User user);
 
     @Query("select id from User where ROWID = :rowid")
-    int getIdByRowid(long rowid);
+    String getIdByRowid(long rowid);
 
     @Delete
     void delete(User user);

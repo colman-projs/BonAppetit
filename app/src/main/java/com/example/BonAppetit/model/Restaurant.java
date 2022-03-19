@@ -13,13 +13,13 @@ import java.util.Map;
 
 @Entity
 public class Restaurant {
-    final public static String COLLECTION_NAME = "users";
+    final public static String COLLECTION_NAME = "restaurants";
 
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     @NonNull
-    int id;
+    String id;
     String name = "";
-    int restaurantTypeId;
+    String restaurantTypeId;
     String description = "";
     Double avgRate = 0.0;
     String imageUrl;
@@ -29,7 +29,7 @@ public class Restaurant {
     Long updateDate = new Long(0);
 
     public Restaurant() {}
-    public Restaurant(String name, int restaurantTypeId, String description, Double avgRate, Double latitude, Double longitude) {
+    public Restaurant(String name, String restaurantTypeId, String description, Double avgRate, Double latitude, Double longitude) {
         this.name = name;
         this.restaurantTypeId = restaurantTypeId;
         this.description = description;
@@ -40,11 +40,11 @@ public class Restaurant {
     }
 
     @NonNull
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(@NonNull int id) {
+    public void setId(@NonNull String id) {
         this.id = id;
     }
 
@@ -56,11 +56,11 @@ public class Restaurant {
         this.name = name;
     }
 
-    public int getRestaurantTypeId() {
+    public String getRestaurantTypeId() {
         return restaurantTypeId;
     }
 
-    public void setRestaurantTypeId(int restaurantTypeId) {
+    public void setRestaurantTypeId(String restaurantTypeId) {
         this.restaurantTypeId = restaurantTypeId;
     }
 
@@ -136,9 +136,9 @@ public class Restaurant {
     }
 
     public static Restaurant create(Map<String, Object> json) {
-        int id = (int) json.get("id");
+        String id = (String) json.get("id");
         String name = (String) json.get("name");
-        int restaurantTypeId = (int) json.get("restaurantTypeId");
+        String restaurantTypeId = (String) json.get("restaurantTypeId");
         String description = (String)json.get("description");
         Double avgRate = (Double)json.get("avgRate");
         String imageUrl = (String)json.get("imageUrl");

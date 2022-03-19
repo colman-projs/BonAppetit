@@ -14,9 +14,9 @@ import java.util.Map;
 public class Review {
     final public static String COLLECTION_NAME = "reviews";
 
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     @NonNull
-    int id;
+    String id;
     int restaurantId;
     int userId;
     String description = "";
@@ -33,11 +33,11 @@ public class Review {
         this.rating = rating;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -111,7 +111,7 @@ public class Review {
     }
 
     public static Review create(Map<String, Object> json) {
-        int id = (int) json.get("id");
+        String id = (String) json.get("id");
         int restaurantId = (int) json.get("restaurantId");
         int userId = (int) json.get("userId");
         String description = (String)json.get("description");

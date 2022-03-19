@@ -14,9 +14,9 @@ import java.util.Map;
 public class User {
     final public static String COLLECTION_NAME = "users";
 
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     @NonNull
-    int id;
+    String id;
     String mail = "";
     String password = "";
     String firstName = "";
@@ -34,11 +34,11 @@ public class User {
     }
 
     @NonNull
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(@NonNull int id) {
+    public void setId(@NonNull String id) {
         this.id = id;
     }
 
@@ -112,7 +112,7 @@ public class User {
     }
 
     public static User create(Map<String, Object> json) {
-        int id = (int) json.get("id");
+        String id = (String) json.get("id");
         String mail = (String) json.get("mail");
         String password = (String) json.get("password");
         String firstName = (String)json.get("firstName");

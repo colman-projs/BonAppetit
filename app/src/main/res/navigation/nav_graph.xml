@@ -42,6 +42,12 @@
     <action
         android:id="@+id/action_global_MapsFragment"
         app:destination="@id/MapFragment" />
+    <fragment
+        android:id="@+id/addRestaurantFragment"
+        android:name="com.example.BonAppetit.feed.AddRestaurantFragment"
+        android:label="Add New Restaurant"
+        tools:layout="@layout/fragment_add_restaurant" />
+    <action android:id="@+id/action_global_addRestaurantFragment" app:destination="@id/addRestaurantFragment" />
 
     <!--  Restaurant Reviews-->
         <fragment
