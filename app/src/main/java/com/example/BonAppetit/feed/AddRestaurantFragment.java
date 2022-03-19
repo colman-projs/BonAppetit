@@ -1,55 +1,52 @@
 package com.example.BonAppetit.feed;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
+
 import com.example.BonAppetit.R;
 import com.example.BonAppetit.model.Model;
-import com.example.BonAppetit.model.Student;
+import com.example.BonAppetit.model.Restaurant;
 
-public class AddStudentFragment extends Fragment {
+public class AddRestaurantFragment extends Fragment {
     private static final int REQUEST_CAMERA = 1;
     EditText nameEt;
-    EditText idEt;
-    CheckBox cb;
+    ImageView imageImv;
+    EditText descEt;
+
     Button saveBtn;
     Button cancelBtn;
     ProgressBar progressBar;
     Bitmap imageBitmap;
-    ImageView avatarImv;
     ImageButton camBtn;
     ImageButton galleryBtn;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_add_student,container, false);
+        View view = inflater.inflate(R.layout.fragment_add_restaurant,container, false);
         nameEt = view.findViewById(R.id.main_name_et);
-        idEt = view.findViewById(R.id.main_id_et);
-        cb = view.findViewById(R.id.main_cb);
+        descEt = view.findViewById(R.id.main_desc_et);
         saveBtn = view.findViewById(R.id.main_save_btn);
         cancelBtn = view.findViewById(R.id.main_cancel_btn);
         progressBar = view.findViewById(R.id.main_progressbar);
         progressBar.setVisibility(View.GONE);
-        avatarImv = view.findViewById(R.id.main_avatar_imv);
+        imageImv = view.findViewById(R.id.main_image_imv);
 
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,7 +83,7 @@ public class AddStudentFragment extends Fragment {
             if (resultCode == Activity.RESULT_OK){
                 Bundle extras = data.getExtras();
                 imageBitmap = (Bitmap) extras.get("data");
-                avatarImv.setImageBitmap(imageBitmap);
+                imageImv.setImageBitmap(imageBitmap);
 
             }
         }
@@ -100,21 +97,21 @@ public class AddStudentFragment extends Fragment {
         galleryBtn.setEnabled(false);
 
         String name = nameEt.getText().toString();
-        String id = idEt.getText().toString();
-        boolean flag = cb.isChecked();
-        Log.d("TAG","saved name:" + name + " id:" + id + " flag:" + flag);
-        Student student = new Student(name,id,flag);
-        if (imageBitmap == null){
-            Model.instance.addStudent(student,()->{
-                Navigation.findNavController(nameEt).navigateUp();
-            });
-        }else{
-            Model.instance.saveUserImage(imageBitmap, id + ".jpg", url -> {
-                student.setAvatarUrl(url);
-                Model.instance.addStudent(student,()->{
-                    Navigation.findNavController(nameEt).navigateUp();
+        String desc = descEt.getText().toString();
+        Double latitude = 0.0,
+                longitude = 0.0;
+        Restaurant restaurant = new Restaurant(name, "", desc, 0.0, latitude, longitude);
+        Model.instance.addRestaurant(restaurant,()->{
+            if (imageBitmap != null){
+                Model.instance.saveRestaurantImage(imageBitmap, restaurant.getId() + ".jpg", url -> {
+                    restaurant.setImageUrl(url);
+                    Model.instance.updateRestaurant(restaurant,()->{
+                        Navigation.findNavController(nameEt).navigateUp();
+                    });
                 });
-            });
-        }
+            } else {
+                Navigation.findNavController(nameEt).navigateUp();
+            }
+        });
     }
 }

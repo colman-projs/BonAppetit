@@ -14,9 +14,9 @@ import java.util.Map;
 public class RestaurantType {
     final public static String COLLECTION_NAME = "restaurant_type";
 
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     @NonNull
-    int id;
+    String id;
     String name = "";
     String imageUrl;
     boolean deleted = false;
@@ -27,11 +27,11 @@ public class RestaurantType {
         this.name = name;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -78,7 +78,7 @@ public class RestaurantType {
     }
 
     public static RestaurantType create(Map<String, Object> json) {
-        int id = (int) json.get("id");
+        String id = (String) json.get("id");
         String name = (String) json.get("name");
         String imageUrl = (String)json.get("imageUrl");
         boolean deleted = (boolean)json.get("deleted");

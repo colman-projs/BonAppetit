@@ -1,15 +1,5 @@
 package com.example.BonAppetit.feed;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavDirections;
-import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,35 +9,42 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.example.BonAppetit.R;
 import com.example.BonAppetit.model.Model;
-import com.example.BonAppetit.model.Student;
+import com.example.BonAppetit.model.Restaurant;
 import com.squareup.picasso.Picasso;
 
-public class StudentListRvFragment extends Fragment {
-    StudentListRvViewModel viewModel;
+public class RestaurantListRvFragment extends Fragment {
+    RestaurantListRvViewModel viewModel;
     MyAdapter adapter;
     SwipeRefreshLayout swipeRefresh;
 
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        viewModel = new ViewModelProvider(this).get(StudentListRvViewModel.class);
+        viewModel = new ViewModelProvider(this).get(RestaurantListRvViewModel.class);
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_students_list,container,false);
+        View view = inflater.inflate(R.layout.fragment_restaurants_list,container,false);
 
-        swipeRefresh = view.findViewById(R.id.studentlist_swiperefresh);
+        swipeRefresh = view.findViewById(R.id.restaurantlist_swiperefresh);
         swipeRefresh.setOnRefreshListener(() -> Model.instance.refreshRestaurantList());
 
-        RecyclerView list = view.findViewById(R.id.studentlist_rv);
+        RecyclerView list = view.findViewById(R.id.restaurantlist_rv);
         list.setHasFixedSize(true);
 
         list.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -59,7 +56,7 @@ public class StudentListRvFragment extends Fragment {
             @Override
             public void onItemClick(View v,int position) {
                 String stId = viewModel.getData().getValue().get(position).getId();
-                Navigation.findNavController(v).navigate((NavDirections) StudentListRvFragmentDirections.actionStudentListRvFragmentToStudentDetailsFragment(stId));
+//                Navigation.findNavController(v).navigate(RestaurantListRvFragmentDirections.actionRestaurantListRvFragmentToRestaurantDetailsFragment(stId));
 
             }
         });
@@ -83,17 +80,15 @@ public class StudentListRvFragment extends Fragment {
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder{
-        ImageView avatarImv;
+        ImageView imageImv;
         TextView nameTv;
-        TextView idTv;
-        CheckBox cb;
+        TextView descTv;
 
         public MyViewHolder(@NonNull View itemView, OnItemClickListener listener) {
             super(itemView);
             nameTv = itemView.findViewById(R.id.listrow_name_tv);
-            idTv = itemView.findViewById(R.id.listrow_id_tv);
-            cb = itemView.findViewById(R.id.listrow_cb);
-            avatarImv = itemView.findViewById(R.id.listrow_avatar_imv);
+            descTv = itemView.findViewById(R.id.listrow_desc_tv);
+            imageImv = itemView.findViewById(R.id.restaurant_listrow_image_imv);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -104,15 +99,14 @@ public class StudentListRvFragment extends Fragment {
             });
         }
 
-        void bind(Student student){
-            nameTv.setText(student.getName());
-            idTv.setText(student.getId());
-            cb.setChecked(student.isFlag());
-            avatarImv.setImageResource(R.drawable.avatar);
-            if (student.getAvatarUrl() != null) {
+        void bind(Restaurant restaurant){
+            nameTv.setText(restaurant.getName());
+            descTv.setText(restaurant.getDescription());
+            imageImv.setImageResource(R.mipmap.food_placeholder);
+            if (restaurant.getImageUrl() != null) {
                 Picasso.get()
-                        .load(student.getAvatarUrl())
-                        .into(avatarImv);
+                        .load(restaurant.getImageUrl())
+                        .into(imageImv);
             }
         }
     }
@@ -130,15 +124,15 @@ public class StudentListRvFragment extends Fragment {
         @NonNull
         @Override
         public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = getLayoutInflater().inflate(R.layout.student_list_row,parent,false);
+            View view = getLayoutInflater().inflate(R.layout.restaurant_list_row,parent,false);
             MyViewHolder holder = new MyViewHolder(view,listener);
             return holder;
         }
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-            Student student = viewModel.getData().getValue().get(position);
-            holder.bind(student);
+            Restaurant restaurant = viewModel.getData().getValue().get(position);
+            holder.bind(restaurant);
         }
 
         @Override
@@ -153,15 +147,18 @@ public class StudentListRvFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.student_list_menu,menu);
+        inflater.inflate(R.menu.restaurant_list_menu,menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.addStudentFragment){
+        if (item.getItemId() == R.id.addRestaurantFragment){
             Log.d("TAG","ADD...");
             return true;
-        }else {
+        } else if (item.getItemId() == R.id.addReviewFragment){
+            Log.d("TAG","ADD...");
+            return true;
+        } else {
             return super.onOptionsItemSelected(item);
         }
     }
