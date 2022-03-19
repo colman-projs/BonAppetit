@@ -19,7 +19,7 @@ public class Restaurant {
     @NonNull
     int id;
     String name = "";
-    String type = "";
+    int restaurantTypeId;
     String description = "";
     Double avgRate = 0.0;
     String imageUrl;
@@ -29,9 +29,9 @@ public class Restaurant {
     Long updateDate = new Long(0);
 
     public Restaurant() {}
-    public Restaurant(String name, String type, String description, Double avgRate, Double latitude, Double longitude) {
+    public Restaurant(String name, int restaurantTypeId, String description, Double avgRate, Double latitude, Double longitude) {
         this.name = name;
-        this.type = type;
+        this.restaurantTypeId = restaurantTypeId;
         this.description = description;
         this.avgRate = avgRate;
         this.imageUrl = imageUrl;
@@ -56,12 +56,12 @@ public class Restaurant {
         this.name = name;
     }
 
-    public String getType() {
-        return type;
+    public int getRestaurantTypeId() {
+        return restaurantTypeId;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setRestaurantTypeId(int restaurantTypeId) {
+        this.restaurantTypeId = restaurantTypeId;
     }
 
     public String getDescription() {
@@ -124,7 +124,7 @@ public class Restaurant {
         Map<String, Object> json = new HashMap<>();
         json.put("id", id);
         json.put("name", name);
-        json.put("type", type);
+        json.put("restaurantTypeId", restaurantTypeId);
         json.put("description", description);
         json.put("avgRate", avgRate);
         json.put("imageUrl", imageUrl);
@@ -138,7 +138,7 @@ public class Restaurant {
     public static Restaurant create(Map<String, Object> json) {
         int id = (int) json.get("id");
         String name = (String) json.get("name");
-        String type = (String) json.get("type");
+        int restaurantTypeId = (int) json.get("restaurantTypeId");
         String description = (String)json.get("description");
         Double avgRate = (Double)json.get("avgRate");
         String imageUrl = (String)json.get("imageUrl");
@@ -148,7 +148,7 @@ public class Restaurant {
         Timestamp ts = (Timestamp)json.get("updateDate");
         Long updateDate = ts.getSeconds();
 
-        Restaurant restaurant = new Restaurant(name, type, description, avgRate, latitude, longitude);
+        Restaurant restaurant = new Restaurant(name, restaurantTypeId, description, avgRate, latitude, longitude);
         restaurant.setId(id);
         restaurant.setImageUrl(imageUrl);
         restaurant.setDeleted(deleted);
