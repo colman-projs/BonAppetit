@@ -144,7 +144,7 @@ public class RestaurantListRvFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.restaurant_list_menu,menu);
+        inflater.inflate(R.menu.restaurants_list_menu,menu);
     }
 
     @Override
@@ -152,7 +152,10 @@ public class RestaurantListRvFragment extends Fragment {
         if (item.getItemId() == R.id.addRestaurantFragment){
             Log.d("TAG","ADD...");
             return true;
-        }else {
+        } else if (item.getItemId() == R.id.addReviewFragment){
+            Log.d("TAG","ADD...");
+            return true;
+        } else {
             return super.onOptionsItemSelected(item);
         }
     }
