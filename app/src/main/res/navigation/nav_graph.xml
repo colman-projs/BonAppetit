@@ -52,6 +52,6 @@
     <fragment
         android:id="@+id/restaurantListRvFragment"
         android:name="com.example.BonAppetit.feed.RestaurantListRvFragment"
-        android:label="fragment_restaurants_list"
+        android:label="Restaurants List"
         tools:layout="@layout/fragment_restaurants_list" />
 </navigation>
