@@ -35,9 +35,19 @@ public class Model {
         modelFirebase.getUserLogin(mail, password, listener);
     }
 
+    public interface GetUserExistsListener {
+        void onComplete(boolean exists);
+    }
+
+    public void getIfUserExists(String email, Model.GetUserExistsListener listener) {
+        modelFirebase.getIfUserExists(email, listener);
+    }
+
+
     public interface AddListener {
         void onComplete();
     }
+
 
     public void registerUser(User user, AddListener listener) {
         modelFirebase.registerUser(user, () -> {

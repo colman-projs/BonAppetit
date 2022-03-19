@@ -3,9 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/restaurantListRvFragment">
-
-<!--    Restaurants List-->
+    app:startDestination="@id/loginFragment"
+    app:defaultNavHost="true">
     <fragment
         android:id="@+id/restaurantListRvFragment"
         android:name="com.example.BonAppetit.feed.RestaurantListRvFragment"
@@ -59,4 +58,29 @@
                 android:name="restaurantId"
                 app:argType="string" />
         </fragment>
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.BonAppetit.login.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_loginFragment_to_registerFragment"
+            app:destination="@id/registerFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_restaurantListRvFragment"
+            app:destination="@id/restaurantListRvFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.example.BonAppetit.login.RegisterFragment"
+        android:label="fragment_register"
+        tools:layout="@layout/fragment_register" >
+        <action
+            android:id="@+id/action_registerFragment_to_restaurantListRvFragment"
+            app:destination="@id/restaurantListRvFragment"
+            app:popUpTo="@id/registerFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
 </navigation>
