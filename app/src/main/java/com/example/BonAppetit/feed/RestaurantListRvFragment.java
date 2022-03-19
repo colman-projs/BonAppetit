@@ -9,7 +9,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -151,12 +150,12 @@ public class RestaurantListRvFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.student_list_menu,menu);
+        inflater.inflate(R.menu.restaurants_list_menu,menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.addStudentFragment){
+        if (item.getItemId() == R.id.addReviewFragment){
             Log.d("TAG","ADD...");
             return true;
         }else {

@@ -7,10 +7,4 @@
         android:icon="@android:drawable/ic_menu_mapmode"
         android:title="Map"
         app:showAsAction="always" />
-
-    <item
-        android:id="@+id/addStudentFragment"
-        android:icon="@android:drawable/ic_menu_add"
-        android:title="Add"
-        app:showAsAction="always" />
 </menu>
