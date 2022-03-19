@@ -5,53 +5,52 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/restaurantListRvFragment">
 
+<!--    Restaurants List-->
     <fragment
-        android:id="@+id/studentListRvFragment"
-        android:name="com.example.BonAppetit.feed.StudentListRvFragment"
-        android:label="Restaurants"
-        tools:layout="@layout/fragment_students_list">
+        android:id="@+id/restaurantListRvFragment"
+        android:name="com.example.BonAppetit.feed.RestaurantListRvFragment"
+        android:label="Restaurants List"
+        tools:layout="@layout/fragment_restaurants_list">
+<!--        Navigation To Restaurant Reviews-->
         <action
-            android:id="@+id/action_studentListRvFragment_to_studentDetailsFragment"
-            app:destination="@id/studentDetailsFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/studentDetailsFragment"
-        android:name="com.example.BonAppetit.feed.StudentDetailsFragment"
-        android:label="Review Details"
-        tools:layout="@layout/fragment_student_details">
-        <argument
-            android:name="studentId"
-            app:argType="string" />
-    </fragment>
-    <fragment
-        android:id="@+id/aboutFragment2"
-        android:name="com.example.BonAppetit.common.AboutFragment"
-        android:label="Restaurant Reviews"
-        tools:layout="@layout/fragment_about" />
-    <action android:id="@+id/action_global_aboutFragment" app:destination="@id/aboutFragment2" />
+            android:id="@+id/action_restaurantListRvFragment_to_restaurantReviewsFragment"
+            app:destination="@id/RestaurantReviewsFragment" />
 
-<!--    To Add Student-->
+<!--    About -->
+    </fragment>
+        <fragment
+            android:id="@+id/aboutFragment2"
+            android:name="com.example.BonAppetit.common.AboutFragment"
+            android:label="About"
+            tools:layout="@layout/fragment_about" />
+        <action android:id="@+id/action_global_aboutFragment" app:destination="@id/aboutFragment2" />
+
+    <!--    Add Review-->
     <fragment
-        android:id="@+id/addStudentFragment"
-        android:name="com.example.BonAppetit.feed.AddStudentFragment"
+        android:id="@+id/addReviewFragment"
+        android:name="com.example.BonAppetit.feed.AddReviewFragment"
         android:label="Add New Review"
-        tools:layout="@layout/fragment_add_student" />
-    <action android:id="@+id/action_global_addStudentFragment" app:destination="@id/addStudentFragment" />
+        tools:layout="@layout/fragment_add_review" />
+    <action android:id="@+id/action_global_addReviewFragment" app:destination="@id/addReviewFragment" />
 
-<!--    ToMap-->
+    <!--   Map-->
     <fragment
         android:id="@+id/MapFragment"
         android:name="com.example.BonAppetit.feed.MapsFragment"
         android:label="Restaurants Map"
         tools:layout="@layout/fragment_maps" />
-
-
     <action
         android:id="@+id/action_global_MapsFragment"
         app:destination="@id/MapFragment" />
-    <fragment
-        android:id="@+id/restaurantListRvFragment"
-        android:name="com.example.BonAppetit.feed.RestaurantListRvFragment"
-        android:label="fragment_restaurants_list"
-        tools:layout="@layout/fragment_restaurants_list" />
+
+    <!--  Restaurant Reviews-->
+        <fragment
+            android:id="@+id/RestaurantReviewsFragment"
+            android:name="com.example.BonAppetit.feed.RestaurantReviewsFragment"
+            android:label="Restaurant Reviews"
+            tools:layout="@layout/fragment_restaurant_reviews">
+            <argument
+                android:name="restaurantId"
+                app:argType="string" />
+        </fragment>
 </navigation>
