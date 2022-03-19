@@ -26,7 +26,7 @@ import com.example.BonAppetit.model.Restaurant;
 public class AddRestaurantFragment extends Fragment {
     private static final int REQUEST_CAMERA = 1;
     EditText nameEt;
-    ImageView avatarImv;
+    ImageView imageImv;
     EditText descEt;
 
     Button saveBtn;
@@ -46,7 +46,7 @@ public class AddRestaurantFragment extends Fragment {
         cancelBtn = view.findViewById(R.id.main_cancel_btn);
         progressBar = view.findViewById(R.id.main_progressbar);
         progressBar.setVisibility(View.GONE);
-        avatarImv = view.findViewById(R.id.main_image_imv);
+        imageImv = view.findViewById(R.id.main_image_imv);
 
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,7 +83,7 @@ public class AddRestaurantFragment extends Fragment {
             if (resultCode == Activity.RESULT_OK){
                 Bundle extras = data.getExtras();
                 imageBitmap = (Bitmap) extras.get("data");
-                avatarImv.setImageBitmap(imageBitmap);
+                imageImv.setImageBitmap(imageBitmap);
 
             }
         }
@@ -105,7 +105,7 @@ public class AddRestaurantFragment extends Fragment {
             if (imageBitmap != null){
                 Model.instance.saveRestaurantImage(imageBitmap, restaurant.getId() + ".jpg", url -> {
                     restaurant.setImageUrl(url);
-                    Model.instance.addRestaurant(restaurant,()->{
+                    Model.instance.updateRestaurant(restaurant,()->{
                         Navigation.findNavController(nameEt).navigateUp();
                     });
                 });
