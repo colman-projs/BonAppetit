@@ -28,17 +28,25 @@
         android:name="com.example.BonAppetit.common.AboutFragment"
         android:label="About"
         tools:layout="@layout/fragment_about" />
-    <action
-        android:id="@+id/action_global_aboutFragment"
-        app:destination="@id/aboutFragment2" />
+    <action android:id="@+id/action_global_aboutFragment" app:destination="@id/aboutFragment2" />
+
+<!--    To Add Student-->
     <fragment
         android:id="@+id/addStudentFragment"
         android:name="com.example.BonAppetit.feed.AddStudentFragment"
         android:label="Add New Student"
         tools:layout="@layout/fragment_add_student" />
-    <action
-        android:id="@+id/action_global_addStudentFragment"
-        app:destination="@id/addStudentFragment" />
+    <action android:id="@+id/action_global_addStudentFragment" app:destination="@id/addStudentFragment" />
+
+<!--    ToMap-->
+    <fragment
+        android:id="@+id/MapFragment"
+        android:name="com.example.BonAppetit.feed.MapsFragment"
+        android:label="map"
+        tools:layout="@layout/fragment_maps" />
+
+
+    <action android:id="@+id/action_global_MapsFragment" app:destination="@id/map" />
     <fragment
         android:id="@+id/restaurantListRvFragment"
         android:name="com.example.BonAppetit.feed.RestaurantListRvFragment"

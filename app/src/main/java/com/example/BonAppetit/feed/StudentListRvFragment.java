@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -58,7 +59,7 @@ public class StudentListRvFragment extends Fragment {
             @Override
             public void onItemClick(View v,int position) {
                 String stId = viewModel.getData().getValue().get(position).getId();
-                Navigation.findNavController(v).navigate(StudentListRvFragmentDirections.actionStudentListRvFragmentToStudentDetailsFragment(stId));
+                Navigation.findNavController(v).navigate((NavDirections) StudentListRvFragmentDirections.actionStudentListRvFragmentToStudentDetailsFragment(stId));
 
             }
         });
