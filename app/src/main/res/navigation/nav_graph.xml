@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/studentListRvFragment">
+    app:startDestination="@id/restaurantListRvFragment">
 
     <fragment
         android:id="@+id/studentListRvFragment"
@@ -44,5 +44,14 @@
         android:name="com.example.BonAppetit.feed.MapsFragment"
         android:label="Restaurants Map"
         tools:layout="@layout/fragment_maps" />
-    <action android:id="@+id/action_global_MapsFragment" app:destination="@id/map" />
+
+
+    <action
+        android:id="@+id/action_global_MapsFragment"
+        app:destination="@id/MapFragment" />
+    <fragment
+        android:id="@+id/restaurantListRvFragment"
+        android:name="com.example.BonAppetit.feed.RestaurantListRvFragment"
+        android:label="fragment_restaurants_list"
+        tools:layout="@layout/fragment_restaurants_list" />
 </navigation>
