@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -44,7 +45,7 @@ public class StudentListRvFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_students_list,container,false);
 
         swipeRefresh = view.findViewById(R.id.studentlist_swiperefresh);
-        swipeRefresh.setOnRefreshListener(() -> Model.instance.refreshStudentList());
+        swipeRefresh.setOnRefreshListener(() -> Model.instance.refreshRestaurantList());
 
         RecyclerView list = view.findViewById(R.id.studentlist_rv);
         list.setHasFixedSize(true);
@@ -58,16 +59,16 @@ public class StudentListRvFragment extends Fragment {
             @Override
             public void onItemClick(View v,int position) {
                 String stId = viewModel.getData().getValue().get(position).getId();
-                Navigation.findNavController(v).navigate(StudentListRvFragmentDirections.actionStudentListRvFragmentToStudentDetailsFragment(stId));
+                Navigation.findNavController(v).navigate((NavDirections) StudentListRvFragmentDirections.actionStudentListRvFragmentToStudentDetailsFragment(stId));
 
             }
         });
 
         setHasOptionsMenu(true);
         viewModel.getData().observe(getViewLifecycleOwner(), list1 -> refresh());
-        swipeRefresh.setRefreshing(Model.instance.getStudentListLoadingState().getValue() == Model.StudentListLoadingState.loading);
-        Model.instance.getStudentListLoadingState().observe(getViewLifecycleOwner(), studentListLoadingState -> {
-            if (studentListLoadingState == Model.StudentListLoadingState.loading){
+        swipeRefresh.setRefreshing(Model.instance.getRestaurantListLoadingState().getValue() == Model.RestaurantListLoadingState.loading);
+        Model.instance.getRestaurantListLoadingState().observe(getViewLifecycleOwner(), restaurantListLoadingState -> {
+            if (restaurantListLoadingState == Model.RestaurantListLoadingState.loading){
                 swipeRefresh.setRefreshing(true);
             }else{
                 swipeRefresh.setRefreshing(false);
