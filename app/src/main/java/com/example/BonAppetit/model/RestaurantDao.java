@@ -24,7 +24,7 @@ public interface RestaurantDao {
     long insert(Restaurant restaurant);
 
     @Query("select id from Restaurant where ROWID = :rowid")
-    int getIdByRowid(long rowid);
+    String getIdByRowid(long rowid);
 
     @Delete
     void delete(Restaurant restaurant);
