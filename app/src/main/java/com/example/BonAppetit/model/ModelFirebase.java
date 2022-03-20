@@ -72,7 +72,8 @@ public class ModelFirebase {
     public void registerUser(User user, Model.AddListener listener) {
         Map<String, Object> json = user.toJson();
         db.collection(User.COLLECTION_NAME)
-                .add(json)
+                .document(user.getId())
+                .set(json)
                 .addOnSuccessListener(unused -> listener.onComplete())
                 .addOnFailureListener(e -> listener.onComplete());
     }
@@ -199,7 +200,7 @@ public class ModelFirebase {
 
     public void updateReview(Review review, Model.AddListener listener) {
         Map<String, Object> json = review.toJson();
-        db.collection(Restaurant.COLLECTION_NAME)
+        db.collection(Review.COLLECTION_NAME)
                 .document(review.getId())
                 .set(json)
                 .addOnSuccessListener(unused -> listener.onComplete())
