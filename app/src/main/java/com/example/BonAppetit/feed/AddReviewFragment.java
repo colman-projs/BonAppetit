@@ -22,6 +22,7 @@ import androidx.navigation.Navigation;
 import com.example.BonAppetit.R;
 import com.example.BonAppetit.model.Model;
 import com.example.BonAppetit.model.Review;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class AddReviewFragment extends Fragment {
     private static final int REQUEST_CAMERA = 1;
@@ -92,6 +93,7 @@ public class AddReviewFragment extends Fragment {
         Double latitude = 0.0,
                 longitude = 0.0;
         String restaurantId = "", userId = "", description = "";
+//        FirebaseAuth.getInstance().getCurrentUser().getUid();
         int rating = 0;
         Review review = new Review(restaurantId, userId, description, rating);
         Model.instance.addRestaurantReview(review, () -> {

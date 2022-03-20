@@ -46,6 +46,22 @@ public class ModelFirebase {
                 });
     }
 
+    public void getUserById(String id, Model.GetUserLoginListener listener) {
+        db.collection(User.COLLECTION_NAME)
+                .whereEqualTo("id", id)
+                .get()
+                .addOnCompleteListener(task -> {
+                    List<User> list = new LinkedList<>();
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot doc : task.getResult()) {
+                            User user = User.create(doc.getData());
+                            list.add(user);
+                        }
+                    }
+                    listener.onComplete(list.get(0));
+                });
+    }
+
     public void getIfUserExists(String email, Model.GetUserExistsListener listener) {
         db.collection(User.COLLECTION_NAME)
                 .whereEqualTo("mail", email)
