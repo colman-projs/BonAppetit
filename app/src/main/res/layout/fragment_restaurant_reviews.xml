@@ -7,7 +7,7 @@ android:layout_height="match_parent"
 tools:context=".feed.RestaurantReviewsFragment">
 
     <ImageView
-        android:id="@+id/details_avatar_img"
+        android:id="@+id/restaurant_detail_image_img"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"

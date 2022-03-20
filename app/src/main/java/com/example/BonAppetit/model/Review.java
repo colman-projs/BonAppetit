@@ -17,8 +17,8 @@ public class Review {
     @PrimaryKey
     @NonNull
     String id;
-    int restaurantId;
-    int userId;
+    String restaurantId;
+    String userId;
     String description = "";
     int rating;
     String imageUrl;
@@ -26,7 +26,7 @@ public class Review {
     Long updateDate = new Long(0);
 
     public Review() {}
-    public Review(int restaurantId, int userId, String description, int rating) {
+    public Review(String restaurantId, String userId, String description, int rating) {
         this.restaurantId = restaurantId;
         this.userId = userId;
         this.description = description;
@@ -41,19 +41,19 @@ public class Review {
         this.id = id;
     }
 
-    public int getRestaurantId() {
+    public String getRestaurantId() {
         return restaurantId;
     }
 
-    public void setRestaurantId(int restaurantId) {
+    public void setRestaurantId(String restaurantId) {
         this.restaurantId = restaurantId;
     }
 
-    public int getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 
@@ -112,10 +112,10 @@ public class Review {
 
     public static Review create(Map<String, Object> json) {
         String id = (String) json.get("id");
-        int restaurantId = (int) json.get("restaurantId");
-        int userId = (int) json.get("userId");
+        String restaurantId = (String) json.get("restaurantId");
+        String userId = (String) json.get("userId");
         String description = (String)json.get("description");
-        int rating = (int)json.get("rating");
+        int rating = ((Long)json.get("rating")).intValue();
         String imageUrl = (String)json.get("imageUrl");
         boolean deleted = (boolean)json.get("deleted");
         Timestamp ts = (Timestamp)json.get("updateDate");

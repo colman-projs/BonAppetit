@@ -91,7 +91,9 @@ public class AddReviewFragment extends Fragment {
         String desc = descEt.getText().toString();
         Double latitude = 0.0,
                 longitude = 0.0;
-        Review review = new Review();
+        String restaurantId = "", userId = "", description = "";
+        int rating = 0;
+        Review review = new Review(restaurantId, userId, description, rating);
         Model.instance.addRestaurantReview(review, () -> {
             if (imageBitmap != null) {
                 Model.instance.saveRestaurantImage(imageBitmap, review.getId() + ".jpg", url -> {

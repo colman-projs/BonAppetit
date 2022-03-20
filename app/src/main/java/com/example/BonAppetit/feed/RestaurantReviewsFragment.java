@@ -22,6 +22,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.BonAppetit.R;
 import com.example.BonAppetit.model.Model;
+import com.example.BonAppetit.model.Restaurant;
 import com.example.BonAppetit.model.Review;
 import com.squareup.picasso.Picasso;
 
@@ -29,6 +30,9 @@ public class RestaurantReviewsFragment extends Fragment {
     RestaurantReviewsViewModel viewModel;
     MyAdapter adapter;
     SwipeRefreshLayout swipeRefresh;
+
+    String restaurantId;
+    ImageView restaurantImageImv;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -41,8 +45,22 @@ public class RestaurantReviewsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_restaurant_reviews, container, false);
 
+        restaurantId = RestaurantReviewsFragmentArgs.fromBundle(getArguments()).getRestaurantId();
+        viewModel.changeRestaurantId(restaurantId);
+
+        restaurantImageImv = view.findViewById(R.id.restaurant_detail_image_img);
+
         swipeRefresh = view.findViewById(R.id.restaurantreviews_swiperefresh);
-        swipeRefresh.setOnRefreshListener(() -> Model.instance.refreshRestaurantReviews());
+        swipeRefresh.setOnRefreshListener(() -> Model.instance.refreshRestaurantReviews(restaurantId));
+
+        Model.instance.getRestaurantById(restaurantId, new Model.GetRestaurantById() {
+            @Override
+            public void onComplete(Restaurant restaurant) {
+                if (restaurant.getImageUrl() != null) {
+                    Picasso.get().load(restaurant.getImageUrl()).into(restaurantImageImv);
+                }
+            }
+        });
 
         RecyclerView list = view.findViewById(R.id.restaurantreviews);
         list.setHasFixedSize(true);
