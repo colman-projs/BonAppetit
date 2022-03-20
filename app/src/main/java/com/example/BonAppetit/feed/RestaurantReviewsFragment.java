@@ -22,13 +22,22 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.BonAppetit.R;
 import com.example.BonAppetit.model.Model;
+import com.example.BonAppetit.model.Restaurant;
 import com.example.BonAppetit.model.Review;
+import com.example.BonAppetit.model.User;
 import com.squareup.picasso.Picasso;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class RestaurantReviewsFragment extends Fragment {
     RestaurantReviewsViewModel viewModel;
     MyAdapter adapter;
     SwipeRefreshLayout swipeRefresh;
+
+    String restaurantId;
+    ImageView restaurantImageImv;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -41,8 +50,22 @@ public class RestaurantReviewsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_restaurant_reviews, container, false);
 
+        restaurantId = RestaurantReviewsFragmentArgs.fromBundle(getArguments()).getRestaurantId();
+        viewModel.changeRestaurantId(restaurantId);
+
+        restaurantImageImv = view.findViewById(R.id.restaurant_detail_image_img);
+
         swipeRefresh = view.findViewById(R.id.restaurantreviews_swiperefresh);
-        swipeRefresh.setOnRefreshListener(() -> Model.instance.refreshRestaurantReviews());
+        swipeRefresh.setOnRefreshListener(() -> Model.instance.refreshRestaurantReviews(restaurantId));
+
+        Model.instance.getRestaurantById(restaurantId, new Model.GetRestaurantById() {
+            @Override
+            public void onComplete(Restaurant restaurant) {
+                if (restaurant.getImageUrl() != null) {
+                    Picasso.get().load(restaurant.getImageUrl()).into(restaurantImageImv);
+                }
+            }
+        });
 
         RecyclerView list = view.findViewById(R.id.restaurantreviews);
         list.setHasFixedSize(true);
@@ -80,15 +103,19 @@ public class RestaurantReviewsFragment extends Fragment {
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {
-        ImageView imageImv;
+        ImageView userImageImv;
         TextView nameTv;
+        TextView dateTv;
         TextView descTv;
+        ImageView imageImv;
 
         public MyViewHolder(@NonNull View itemView, OnItemClickListener listener) {
             super(itemView);
-            nameTv = itemView.findViewById(R.id.listrow_name_tv);
-            descTv = itemView.findViewById(R.id.listrow_desc_tv);
-            imageImv = itemView.findViewById(R.id.restaurant_listrow_image_imv);
+            userImageImv = itemView.findViewById(R.id.review_listrow_user_image_imv);
+            nameTv = itemView.findViewById(R.id.review_listrow_name_tv);
+            dateTv = itemView.findViewById(R.id.review_listrow_date_tv);
+            descTv = itemView.findViewById(R.id.review_listrow_description_tv);
+            imageImv = itemView.findViewById(R.id.review_listrow_image_imv);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -100,14 +127,26 @@ public class RestaurantReviewsFragment extends Fragment {
         }
 
         void bind(Review review) {
-            nameTv.setText(review.getDescription());
             descTv.setText(review.getDescription());
-            imageImv.setImageResource(R.mipmap.food_placeholder);
+            Date reviewDate = new Date(review.getUpdateDate() * 1000);
+            DateFormat df = new SimpleDateFormat("dd:MM:yyyy HH:mm:ss");
+            dateTv.setText(df.format(reviewDate));
             if (review.getImageUrl() != null) {
                 Picasso.get()
                         .load(review.getImageUrl())
                         .into(imageImv);
             }
+
+            Model.instance.getUserById(review.getUserId(), user1 -> {
+                nameTv.setText(user1.getFullName());
+                userImageImv.setImageResource(R.drawable.avatar);
+                if (user1.getAvatarUrl() != null) {
+                    Picasso.get()
+                            .load(user1.getAvatarUrl())
+                            .into(userImageImv);
+                }
+            });
+
         }
     }
 
@@ -126,7 +165,7 @@ public class RestaurantReviewsFragment extends Fragment {
         @NonNull
         @Override
         public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = getLayoutInflater().inflate(R.layout.restaurant_list_row, parent, false);
+            View view = getLayoutInflater().inflate(R.layout.review_list_row, parent, false);
             MyViewHolder holder = new MyViewHolder(view, listener);
             return holder;
         }

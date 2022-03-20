@@ -17,6 +17,9 @@ public interface ReviewDao {
     @Query("select * from Review")
     List<Review> getAll();
 
+    @Query("select * from Review where restaurantId = :restaurantId")
+    List<Review> getByRestaurant(String restaurantId);
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(Review... reviews);
 
