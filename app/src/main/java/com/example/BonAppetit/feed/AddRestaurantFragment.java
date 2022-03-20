@@ -48,23 +48,14 @@ public class AddRestaurantFragment extends Fragment {
         progressBar.setVisibility(View.GONE);
         imageImv = view.findViewById(R.id.main_image_imv);
 
-        saveBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                save();
-            }
-        });
+        saveBtn.setOnClickListener(v -> save());
 
         camBtn = view.findViewById(R.id.main_cam_btn);
         galleryBtn = view.findViewById(R.id.main_gallery_btn);
 
-        camBtn.setOnClickListener(v -> {
-            openCam();
-        });
+        camBtn.setOnClickListener(v -> openCam());
 
-        galleryBtn.setOnClickListener(v -> {
-            openGallery();     
-        });
+        galleryBtn.setOnClickListener(v -> openGallery());
         return view;
     }
 
@@ -105,9 +96,8 @@ public class AddRestaurantFragment extends Fragment {
             if (imageBitmap != null){
                 Model.instance.saveRestaurantImage(imageBitmap, restaurant.getId() + ".jpg", url -> {
                     restaurant.setImageUrl(url);
-                    Model.instance.updateRestaurant(restaurant,()->{
-                        Navigation.findNavController(nameEt).navigateUp();
-                    });
+                    Model.instance.updateRestaurant(restaurant,
+                            ()-> Navigation.findNavController(nameEt).navigateUp());
                 });
             } else {
                 Navigation.findNavController(nameEt).navigateUp();

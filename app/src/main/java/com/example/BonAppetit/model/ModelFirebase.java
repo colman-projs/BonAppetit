@@ -1,39 +1,28 @@
 package com.example.BonAppetit.model;
 
-import static java.lang.Integer.parseInt;
-
 import android.graphics.Bitmap;
-import android.net.Uri;
 
-import androidx.annotation.NonNull;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.google.type.LatLng;
 
 import java.io.ByteArrayOutputStream;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Future;
+import java.util.Objects;
 
 public class ModelFirebase {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    public ModelFirebase(){
+    public ModelFirebase() {
         FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
                 .setPersistenceEnabled(false)
                 .build();
@@ -45,20 +34,15 @@ public class ModelFirebase {
                 .whereEqualTo("mail", mail)
                 .whereEqualTo("password", password)
                 .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        List<User> list = new LinkedList<>();
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot doc : task.getResult()) {
-                                User user = User.create(doc.getData());
-                                if (user != null) {
-                                    list.add(user);
-                                }
-                            }
+                .addOnCompleteListener(task -> {
+                    List<User> list = new LinkedList<>();
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot doc : task.getResult()) {
+                            User user = User.create(doc.getData());
+                            list.add(user);
                         }
-                        listener.onComplete(list.get(0));
                     }
+                    listener.onComplete(list.get(0));
                 });
     }
 
@@ -66,9 +50,7 @@ public class ModelFirebase {
         db.collection(User.COLLECTION_NAME)
                 .whereEqualTo("mail", email)
                 .get()
-                .addOnCompleteListener( task -> {
-                    listener.onComplete(task.isSuccessful() & task.getResult()!= null);
-                });
+                .addOnCompleteListener(task -> listener.onComplete(task.isSuccessful() & (task.getResult() != null)));
     }
 
     public void registerUser(User user, Model.AddListener listener) {
@@ -79,22 +61,41 @@ public class ModelFirebase {
                 .addOnFailureListener(e -> listener.onComplete());
     }
 
-    public interface GetAllRestaurantsListener{
+    public interface GetAllRestaurantsListener {
         void onComplete(List<Restaurant> list);
+    }
+
+    public interface GetAllRestaurantsReviewsListener {
+        void onComplete(List<Review> list);
     }
 
     public void getAllRestaurants(Long lastUpdateDate, GetAllRestaurantsListener listener) {
         db.collection(Restaurant.COLLECTION_NAME)
-                .whereGreaterThanOrEqualTo("updateDate",new Timestamp(lastUpdateDate,0))
+                .whereGreaterThanOrEqualTo("updateDate", new Timestamp(lastUpdateDate, 0))
                 .get()
                 .addOnCompleteListener(task -> {
-                    List<Restaurant> list = new LinkedList<Restaurant>();
-                    if (task.isSuccessful()){
-                        for (QueryDocumentSnapshot doc : task.getResult()){
+                    List<Restaurant> list = new LinkedList<>();
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot doc : task.getResult()) {
                             Restaurant restaurant = Restaurant.create(doc.getData());
-                            if (restaurant != null){
-                                list.add(restaurant);
-                            }
+                            list.add(restaurant);
+
+                        }
+                    }
+                    listener.onComplete(list);
+                });
+    }
+
+    public void getAllRestaurantReviews(Long lastUpdateDate, GetAllRestaurantsReviewsListener listener) {
+        db.collection(Review.COLLECTION_NAME)
+                .whereGreaterThanOrEqualTo("updateDate", new Timestamp(lastUpdateDate, 0))
+                .get()
+                .addOnCompleteListener(task -> {
+                    List<Review> list = new LinkedList<>();
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot doc : task.getResult()) {
+                            Review review = Review.create(doc.getData());
+                            list.add(review);
                         }
                     }
                     listener.onComplete(list);
@@ -103,15 +104,25 @@ public class ModelFirebase {
 
     public void addRestaurant(Restaurant restaurant, Model.AddListener listener) {
         DocumentReference documentReference = db.collection(Restaurant.COLLECTION_NAME)
-            .document();
+                .document();
         restaurant.setId(documentReference.getId());
         Map<String, Object> json = restaurant.toJson();
         documentReference.set(json)
-            .addOnSuccessListener(unused -> listener.onComplete())
-            .addOnFailureListener(e -> listener.onComplete());
+                .addOnSuccessListener(unused -> listener.onComplete())
+                .addOnFailureListener(e -> listener.onComplete());
     }
 
-    public void updateRestaurant(Restaurant restaurant, Model.AddStudentListener listener) {
+    public void addRestaurantReview(Review review, Model.AddListener listener) {
+        DocumentReference documentReference = db.collection(Review.COLLECTION_NAME)
+                .document();
+        review.setId(documentReference.getId());
+        Map<String, Object> json = review.toJson();
+        documentReference.set(json)
+                .addOnSuccessListener(unused -> listener.onComplete())
+                .addOnFailureListener(e -> listener.onComplete());
+    }
+
+    public void updateRestaurant(Restaurant restaurant, Model.AddListener listener) {
         Map<String, Object> json = restaurant.toJson();
         db.collection(Restaurant.COLLECTION_NAME)
                 .document(restaurant.getId())
@@ -120,50 +131,25 @@ public class ModelFirebase {
                 .addOnFailureListener(e -> listener.onComplete());
     }
 
-    public interface GetAllStudentsListener{
-        void onComplete(List<Student> list);
-    }
-    //TODO: fix since...
-    public void getAllStudents(Long lastUpdateDate, GetAllStudentsListener listener) {
-        db.collection(Student.COLLECTION_NAME)
-                .whereGreaterThanOrEqualTo("updateDate",new Timestamp(lastUpdateDate,0))
-                .get()
-                .addOnCompleteListener(task -> {
-                    List<Student> list = new LinkedList<Student>();
-                    if (task.isSuccessful()){
-                        for (QueryDocumentSnapshot doc : task.getResult()){
-                            Student student = Student.create(doc.getData());
-                            if (student != null){
-                                list.add(student);
-                            }
-                        }
-                    }
-                    listener.onComplete(list);
-                });
-    }
-
-    public void addStudent(Student student, Model.AddStudentListener listener) {
-        Map<String, Object> json = student.toJson();
-        db.collection(Student.COLLECTION_NAME)
-                .document(student.getId())
+    public void updateReview(Review review, Model.AddListener listener) {
+        Map<String, Object> json = review.toJson();
+        db.collection(Restaurant.COLLECTION_NAME)
+                .document(review.getId())
                 .set(json)
                 .addOnSuccessListener(unused -> listener.onComplete())
                 .addOnFailureListener(e -> listener.onComplete());
     }
 
-    public void getStudentById(String studentId, Model.GetStudentById listener) {
-        db.collection(Student.COLLECTION_NAME)
-                .document(studentId)
+    public void getReviewById(String reviewId, Model.getReviewById listener) {
+        db.collection(Review.COLLECTION_NAME)
+                .document(reviewId)
                 .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        Student student = null;
-                        if (task.isSuccessful() & task.getResult()!= null){
-                            student = Student.create(task.getResult().getData());
-                        }
-                        listener.onComplete(student);
+                .addOnCompleteListener(task -> {
+                    Review review = null;
+                    if (task.isSuccessful() & task.getResult()!= null){
+                        review = Review.create(Objects.requireNonNull(task.getResult().getData()));
                     }
+                    listener.onComplete(review);
                 });
     }
 
@@ -171,6 +157,7 @@ public class ModelFirebase {
      * Firebase Storage
      */
     FirebaseStorage storage = FirebaseStorage.getInstance();
+
     public void saveImage(Bitmap imageBitmap, String pathName, String imageName, Model.SaveImageListener listener) {
         StorageReference storageRef = storage.getReference();
         StorageReference imgRef = storageRef.child(pathName + imageName);
@@ -181,23 +168,16 @@ public class ModelFirebase {
 
         UploadTask uploadTask = imgRef.putBytes(data);
         uploadTask.addOnFailureListener(exception -> listener.onComplete(null))
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                imgRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                    Uri downloadUrl = uri;
-                    listener.onComplete(downloadUrl.toString());
-                });
-            }
-        });
+                .addOnSuccessListener(taskSnapshot -> imgRef.getDownloadUrl()
+                        .addOnSuccessListener(uri -> listener.onComplete(uri.toString())));
     }
 
     /**
      * Authentication
      */
-    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private final FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
-    public boolean isSignedIn(){
+    public boolean isSignedIn() {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         return (currentUser != null);
     }
