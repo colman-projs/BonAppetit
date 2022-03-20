@@ -21,7 +21,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.BonAppetit.R;
 import com.example.BonAppetit.model.Model;
-import com.example.BonAppetit.model.Restaurant;
 import com.example.BonAppetit.model.RestaurantType;
 import com.squareup.picasso.Picasso;
 
@@ -30,6 +29,20 @@ public class RestaurantTypesFragment extends Fragment {
     MyAdapter adapter;
     SwipeRefreshLayout swipeRefresh;
     Button confirmButton;
+
+    private RestaurantListRvViewModel restaurantListRvViewModel;
+
+    @Override
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        restaurantListRvViewModel = new ViewModelProvider(requireActivity()).get(RestaurantListRvViewModel.class);
+//        restaurantListRvViewModel.getFilters().observe(getViewLifecycleOwner(), set -> {
+            // Update the selected filters UI
+//        });
+    }
+
+    public void updateFilter(RestaurantType filter) {
+        restaurantListRvViewModel.updateFilter(filter);
+    }
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -56,13 +69,9 @@ public class RestaurantTypesFragment extends Fragment {
         adapter = new MyAdapter();
         list.setAdapter(adapter);
 
-//        adapter.setOnItemClickListener((v, position) -> {
-
-//            String stId = viewModel.getData().getValue().get(position).getId();
-//            Navigation
-//                    .findNavController(v)
-//                    .navigate(RestaurantListRvFragmentDirections.actionRestaurantListRvFragmentToRestaurantReviewsFragment(stId));
-//        });
+        adapter.setOnItemClickListener((v, filter) -> {
+            updateFilter(filter);
+        });
 
         setHasOptionsMenu(true);
         viewModel.getData().observe(getViewLifecycleOwner(), list1 -> refresh());
@@ -90,6 +99,7 @@ public class RestaurantTypesFragment extends Fragment {
         ImageView image;
         TextView name;
         CheckBox checkbox;
+        String id;
 
         public MyViewHolder(@NonNull View itemView, OnItemClickListener listener) {
             super(itemView);
@@ -98,13 +108,16 @@ public class RestaurantTypesFragment extends Fragment {
             checkbox = itemView.findViewById(R.id.restaurant_typerow_cb);
 
             itemView.setOnClickListener(v -> {
-                int pos = getAdapterPosition();
                 checkbox.setChecked(!checkbox.isChecked());
-//                listener.onItemClick(v,pos);
+                listener.onItemClick(v, new RestaurantType(
+                        id,
+                        checkbox.isChecked()));
             });
         }
 
         void bind(RestaurantType restaurantType) {
+            id = restaurantType.getId();
+            checkbox.setChecked(restaurantType.isChecked());
             name.setText(restaurantType.getName());
             image.setImageResource(R.mipmap.food_placeholder);
             if (restaurantType.getImageUrl() != null) {
@@ -116,13 +129,13 @@ public class RestaurantTypesFragment extends Fragment {
     }
 
     interface OnItemClickListener {
-        void onItemClick(View v, int position);
+        void onItemClick(View v, RestaurantType filter);
     }
 
     class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
-
         OnItemClickListener listener;
-        public void setOnItemClickListener(OnItemClickListener listener){
+
+        public void setOnItemClickListener(OnItemClickListener listener) {
             this.listener = listener;
         }
 
@@ -136,8 +149,8 @@ public class RestaurantTypesFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-            RestaurantType restaurantType = viewModel.getData().getValue().get(position);
-            holder.bind(restaurantType);
+            RestaurantType filter = viewModel.getData().getValue().get(position);
+            holder.bind(filter);
         }
 
         @Override
