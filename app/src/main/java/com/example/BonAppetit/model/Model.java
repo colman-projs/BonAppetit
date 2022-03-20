@@ -27,7 +27,7 @@ public class Model {
         loadingState.setValue(LoadingStates.loaded);
     }
 
-    private void onComplete(List<Restaurant> list) {
+    private void onCompleteGetAllRestaurants(List<Restaurant> list) {
         // add all records to the local db
         executor.execute(() -> {
             Long lud = Long.valueOf(0);
@@ -48,6 +48,31 @@ public class Model {
             //return all data to caller
             List<Restaurant> stList = AppLocalDb.db.restaurantDao().getAll();
             restaurantList.postValue(stList);
+            loadingState.postValue(LoadingStates.loaded);
+        });
+    }
+
+    private void onCompleteGetAllRestaurantReviews(List<Review> list) {
+// add all records to the local db
+        executor.execute(() -> {
+            Long lud = Long.valueOf(0);
+            Log.d("TAG", "fb returned " + list.size());
+            for (Review review : list) {
+                AppLocalDb.db.reviewDao().insertAll(review);
+                if (lud < review.getUpdateDate()) {
+                    lud = review.getUpdateDate();
+                }
+            }
+// update last local update date
+            MyApplication.getContext()
+                    .getSharedPreferences("TAG", Context.MODE_PRIVATE)
+                    .edit()
+                    .putLong("ReviewsLastUpdateDate", lud)
+                    .commit();
+
+//return all data to caller
+            List<Review> stList = AppLocalDb.db.reviewDao().getAll();
+            restaurantReviews.postValue(stList);
             loadingState.postValue(LoadingStates.loaded);
         });
     }
@@ -114,7 +139,7 @@ public class Model {
         });
 
         // firebase get all updates since lastLocalUpdateDate
-        modelFirebase.getAllRestaurants(lastUpdateDate, this::onComplete);
+        modelFirebase.getAllRestaurants(lastUpdateDate, this::onCompleteGetAllRestaurants);
     }
 
     public void refreshRestaurantReviews() {
@@ -127,32 +152,10 @@ public class Model {
             List<Review> stList = AppLocalDb.db.reviewDao().getAll();
             restaurantReviews.postValue(stList);
         });
+
         // firebase get all updates since lastLocalUpdateDate
         modelFirebase.getAllRestaurantReviews(reviewsLastUpdateDate,
-                list -> {
-                    // add all records to the local db
-                    executor.execute(() -> {
-                        Long lud = Long.valueOf(0);
-                        Log.d("TAG", "fb returned " + list.size());
-                        for (Review review : list) {
-                            AppLocalDb.db.reviewDao().insertAll(review);
-                            if (lud < review.getUpdateDate()) {
-                                lud = review.getUpdateDate();
-                            }
-                        }
-                        // update last local update date
-                        MyApplication.getContext()
-                                .getSharedPreferences("TAG", Context.MODE_PRIVATE)
-                                .edit()
-                                .putLong("ReviewsLastUpdateDate", lud)
-                                .commit();
-
-                        //return all data to caller
-                        List<Review> stList = AppLocalDb.db.reviewDao().getAll();
-                        restaurantReviews.postValue(stList);
-                        loadingState.postValue(LoadingStates.loaded);
-                    });
-                });
+                this::onCompleteGetAllRestaurantReviews);
     }
 
     public void addRestaurant(Restaurant restaurant, AddListener listener) {
