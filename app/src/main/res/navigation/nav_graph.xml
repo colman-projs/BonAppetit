@@ -49,6 +49,18 @@
     <action
         android:id="@+id/action_MapsFragment_to_restaurantReviewsFragment"
         app:destination="@id/RestaurantReviewsFragment" />
+
+<!--    Restaurnt Types -->
+    <fragment
+        android:id="@+id/RestaurantTypesFragment"
+        android:name="com.example.BonAppetit.feed.RestaurantTypesFragment"
+        android:label="Types Filter"
+        tools:layout="@layout/fragment_restaurants_types" />
+    <action
+        android:id="@+id/action_global_RestaurantTypesFragment"
+        app:destination="@id/RestaurantTypesFragment" />
+
+<!--    Add restaurant-->
     <fragment
         android:id="@+id/addRestaurantFragment"
         android:name="com.example.BonAppetit.feed.AddRestaurantFragment"

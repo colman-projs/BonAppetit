@@ -13,4 +13,10 @@
         android:icon="@android:drawable/ic_input_add"
         android:title="Add"
         app:showAsAction="always" />
+
+    <item
+        android:id="@+id/RestaurantTypesFragment"
+        android:icon="@android:drawable/ic_menu_manage"
+        android:title="Type Filters"
+        app:showAsAction="always" />
 </menu>
