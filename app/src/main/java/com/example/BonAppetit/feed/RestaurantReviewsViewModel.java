@@ -13,12 +13,16 @@ public class RestaurantReviewsViewModel extends ViewModel {
     String restaurantId = "";
 
     public RestaurantReviewsViewModel() {
-        data = Model.instance.getAllReviews();
+//        data = Model.instance.getAllReviews();
     }
 
     public void changeRestaurantId(String restaurantId) {
         this.restaurantId = restaurantId;
         data = Model.instance.getReviewsByRestaurant(restaurantId);
+    }
+
+    public String getRestaurantId() {
+        return restaurantId;
     }
 
     public LiveData<List<Review>> getData() {

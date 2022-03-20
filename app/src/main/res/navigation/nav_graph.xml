@@ -31,10 +31,11 @@
         android:id="@+id/addReviewFragment"
         android:name="com.example.BonAppetit.feed.AddReviewFragment"
         android:label="Add New Review"
-        tools:layout="@layout/fragment_add_review" />
-    <action
-        android:id="@+id/action_global_addReviewFragment"
-        app:destination="@id/addReviewFragment" />
+        tools:layout="@layout/fragment_add_review" >
+        <argument
+            android:name="restaurantId"
+            app:argType="string" />
+    </fragment>
 
     <!--   Map-->
     <fragment
@@ -76,6 +77,9 @@
         <argument
             android:name="restaurantId"
             app:argType="string" />
+        <action
+            android:id="@+id/action_RestaurantReviewsFragment_to_addReviewFragment"
+            app:destination="@id/addReviewFragment" />
     </fragment>
 
     <!--    Login -->
