@@ -58,10 +58,12 @@
                 android:name="restaurantId"
                 app:argType="string" />
         </fragment>
+
+<!--    Login -->
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.example.BonAppetit.login.LoginFragment"
-        android:label="fragment_login"
+        android:label="Login"
         tools:layout="@layout/fragment_login" >
         <action
             android:id="@+id/action_loginFragment_to_registerFragment"
@@ -72,10 +74,12 @@
             app:popUpTo="@id/loginFragment"
             app:popUpToInclusive="true" />
     </fragment>
+
+<!--    Register-->
     <fragment
         android:id="@+id/registerFragment"
         android:name="com.example.BonAppetit.login.RegisterFragment"
-        android:label="fragment_register"
+        android:label="Registration"
         tools:layout="@layout/fragment_register" >
         <action
             android:id="@+id/action_registerFragment_to_restaurantListRvFragment"

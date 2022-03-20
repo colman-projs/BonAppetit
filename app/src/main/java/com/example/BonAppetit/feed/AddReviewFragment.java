@@ -40,7 +40,7 @@ public class AddReviewFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_add_review,container, false);
+        View view = inflater.inflate(R.layout.fragment_add_review, container, false);
         nameEt = view.findViewById(R.id.main_name_et);
         idEt = view.findViewById(R.id.main_id_et);
         cb = view.findViewById(R.id.main_cb);
@@ -65,7 +65,7 @@ public class AddReviewFragment extends Fragment {
         });
 
         galleryBtn.setOnClickListener(v -> {
-            openGallery();     
+            openGallery();
         });
         return view;
     }
@@ -75,14 +75,14 @@ public class AddReviewFragment extends Fragment {
 
     private void openCam() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(intent,REQUEST_CAMERA);
+        startActivityForResult(intent, REQUEST_CAMERA);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CAMERA){
-            if (resultCode == Activity.RESULT_OK){
+        if (requestCode == REQUEST_CAMERA) {
+            if (resultCode == Activity.RESULT_OK) {
                 Bundle extras = data.getExtras();
                 imageBitmap = (Bitmap) extras.get("data");
                 avatarImv.setImageBitmap(imageBitmap);
@@ -101,15 +101,15 @@ public class AddReviewFragment extends Fragment {
         String name = nameEt.getText().toString();
         String id = idEt.getText().toString();
         boolean flag = cb.isChecked();
-        Log.d("TAG","saved name:" + name + " id:" + id + " flag:" + flag);
-        Review review = new Review(1,1,name,1);
-        if (imageBitmap == null){
+        Log.d("TAG", "saved name:" + name + " id:" + id + " flag:" + flag);
+        Review review = new Review(1, 1, name, 1);
+        if (imageBitmap == null) {
 
             // TODO: Add review to restaurant
 //            addReview(review,()->{
 //                Navigation.findNavController(nameEt).navigateUp();
 //            });
-        }else{
+        } else {
             Model.instance.saveUserImage(imageBitmap, id + ".jpg", url -> {
                 review.setImageUrl(url);
 
