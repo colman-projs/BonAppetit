@@ -34,7 +34,6 @@ public class Restaurant {
         this.restaurantTypeId = restaurantTypeId;
         this.description = description;
         this.avgRate = avgRate;
-        this.imageUrl = imageUrl;
         this.latitude = latitude;
         this.longitude = longitude;
     }
