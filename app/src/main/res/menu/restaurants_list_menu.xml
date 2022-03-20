@@ -7,4 +7,10 @@
         android:icon="@android:drawable/ic_menu_mapmode"
         android:title="Map"
         app:showAsAction="always" />
+
+    <item
+        android:id="@+id/RestaurantTypesFragment"
+        android:icon="@android:drawable/ic_menu_manage"
+        android:title="Type Filters"
+        app:showAsAction="always" />
 </menu>
