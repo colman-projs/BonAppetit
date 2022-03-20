@@ -141,7 +141,7 @@ public class Restaurant {
         String restaurantTypeId = (String) json.get("restaurantTypeId");
         String description = (String)json.get("description");
         Object rate = json.get("avgRate");
-        Double avgRate = rate.getClass() == long.class ? ((Long)rate).doubleValue() : (Double)rate;
+        Double avgRate = rate.getClass() == Long.class ? ((Long)rate).doubleValue() : (Double)rate;
         String imageUrl = (String)json.get("imageUrl");
         Double latitude = (Double) json.get("latitude");
         Double longitude = (Double)json.get("longitude");
