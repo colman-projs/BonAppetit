@@ -21,10 +21,16 @@ public class RestaurantType {
     String imageUrl;
     boolean deleted = false;
     Long updateDate = new Long(0);
+    boolean isChecked = false;
 
     public RestaurantType() {}
     public RestaurantType(String name) {
         this.name = name;
+    }
+
+    public RestaurantType(String id, boolean isChecked) {
+        this.id = id;
+        this.isChecked = isChecked;
     }
 
     public String getId() {
@@ -56,7 +62,15 @@ public class RestaurantType {
     }
 
     public void setDeleted(boolean deleted) {
-        this.deleted = deleted;
+        this.isChecked = deleted;
+    }
+
+    public boolean isChecked() {
+        return this.isChecked;
+    }
+
+    public void setChecked(boolean checked) {
+        this.isChecked = checked;
     }
 
     public Long getUpdateDate() {

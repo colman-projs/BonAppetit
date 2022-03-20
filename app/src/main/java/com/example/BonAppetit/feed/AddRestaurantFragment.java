@@ -33,6 +33,8 @@ public class AddRestaurantFragment extends Fragment {
     EditText nameEt;
     ImageView imageImv;
     EditText descEt;
+    EditText latitudeEt;
+    EditText longitudeEt;
 
     Button saveBtn;
     Button cancelBtn;
@@ -47,6 +49,8 @@ public class AddRestaurantFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_add_restaurant,container, false);
         nameEt = view.findViewById(R.id.main_name_et);
         descEt = view.findViewById(R.id.main_desc_et);
+        latitudeEt = view.findViewById(R.id.main_lat_et);
+        longitudeEt = view.findViewById(R.id.main_lng_et);
         saveBtn = view.findViewById(R.id.main_save_btn);
         cancelBtn = view.findViewById(R.id.main_cancel_btn);
         progressBar = view.findViewById(R.id.main_progressbar);
@@ -104,9 +108,10 @@ public class AddRestaurantFragment extends Fragment {
 
         String name = nameEt.getText().toString();
         String desc = descEt.getText().toString();
-        Double latitude = 0.0,
-                longitude = 0.0;
-        Restaurant restaurant = new Restaurant(name, "", desc, 0.0, latitude, longitude);
+        Double latitude = Double.parseDouble(latitudeEt.getText().toString());
+        Double longitude = Double.parseDouble(longitudeEt.getText().toString());
+        String restaurantTypeId = ""; // typeIdEt.getText().toString();
+        Restaurant restaurant = new Restaurant(name, restaurantTypeId, desc, 0.0, latitude, longitude);
         Model.instance.addRestaurant(restaurant,()->{
             if (imageBitmap != null){
                 Model.instance.saveRestaurantImage(imageBitmap, restaurant.getId() + ".jpg", url -> {
