@@ -53,14 +53,11 @@ public class RestaurantListRvFragment extends Fragment {
         adapter = new MyAdapter();
         list.setAdapter(adapter);
 
-        adapter.setOnItemClickListener(new OnItemClickListener() {
-            @Override
-            public void onItemClick(View v,int position) {
-                String stId = viewModel.getData().getValue().get(position).getId();
-                Navigation
-                        .findNavController(v)
-                        .navigate(RestaurantListRvFragmentDirections.actionRestaurantListRvFragmentToRestaurantReviewsFragment(stId));
-            }
+        adapter.setOnItemClickListener((v, position) -> {
+            String stId = viewModel.getData().getValue().get(position).getId();
+            Navigation
+                    .findNavController(v)
+                    .navigate(RestaurantListRvFragmentDirections.actionRestaurantListRvFragmentToRestaurantReviewsFragment(stId));
         });
 
         setHasOptionsMenu(true);
