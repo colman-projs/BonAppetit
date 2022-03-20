@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -56,16 +57,17 @@ public class RestaurantListRvFragment extends Fragment {
             @Override
             public void onItemClick(View v,int position) {
                 String stId = viewModel.getData().getValue().get(position).getId();
-//                Navigation.findNavController(v).navigate(RestaurantListRvFragmentDirections.actionRestaurantListRvFragmentToRestaurantDetailsFragment(stId));
-
+                Navigation
+                        .findNavController(v)
+                        .navigate(RestaurantListRvFragmentDirections.actionRestaurantListRvFragmentToRestaurantReviewsFragment(stId));
             }
         });
 
         setHasOptionsMenu(true);
         viewModel.getData().observe(getViewLifecycleOwner(), list1 -> refresh());
-        swipeRefresh.setRefreshing(Model.instance.getRestaurantListLoadingState().getValue() == Model.RestaurantListLoadingState.loading);
-        Model.instance.getRestaurantListLoadingState().observe(getViewLifecycleOwner(), restaurantListLoadingState -> {
-            if (restaurantListLoadingState == Model.RestaurantListLoadingState.loading){
+        swipeRefresh.setRefreshing(Model.instance.getListLoadingState().getValue() == Model.LoadingStates.loading);
+        Model.instance.getListLoadingState().observe(getViewLifecycleOwner(), loadingState -> {
+            if (loadingState == Model.LoadingStates.loading){
                 swipeRefresh.setRefreshing(true);
             }else{
                 swipeRefresh.setRefreshing(false);

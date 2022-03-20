@@ -11,9 +11,10 @@ import java.util.List;
 public class RestaurantListRvViewModel extends ViewModel {
     LiveData<List<Restaurant>> data;
 
-    public RestaurantListRvViewModel(){
+    public RestaurantListRvViewModel() {
         data = Model.instance.getAll();
     }
+
     public LiveData<List<Restaurant>> getData() {
         return data;
     }

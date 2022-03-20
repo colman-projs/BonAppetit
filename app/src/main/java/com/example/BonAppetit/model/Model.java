@@ -24,7 +24,7 @@ public class Model {
     ModelFirebase modelFirebase = new ModelFirebase();
 
     private Model() {
-        restaurantListLoadingState.setValue(RestaurantListLoadingState.loaded);
+        loadingState.setValue(LoadingStates.loaded);
     }
 
     public interface GetUserLoginListener {
@@ -55,18 +55,19 @@ public class Model {
         });
     }
 
-    public enum RestaurantListLoadingState {
+    public enum LoadingStates {
         loading,
         loaded
     }
 
-    MutableLiveData<RestaurantListLoadingState> restaurantListLoadingState = new MutableLiveData<RestaurantListLoadingState>();
+    MutableLiveData<LoadingStates> loadingState = new MutableLiveData<LoadingStates>();
 
-    public LiveData<RestaurantListLoadingState> getRestaurantListLoadingState() {
-        return restaurantListLoadingState;
+    public LiveData<LoadingStates> getListLoadingState() {
+        return loadingState;
     }
 
     MutableLiveData<List<Restaurant>> restaurantList = new MutableLiveData<List<Restaurant>>();
+    MutableLiveData<List<Review>> restaurantReviews = new MutableLiveData<List<Review>>();
 
     public LiveData<List<Restaurant>> getAll() {
         if (restaurantList.getValue() == null) {
@@ -76,8 +77,16 @@ public class Model {
         return restaurantList;
     }
 
+    public LiveData<List<Review>> getAllReviews() {
+        if (restaurantReviews.getValue() == null) {
+            refreshRestaurantReviews();
+        }
+
+        return restaurantReviews;
+    }
+
     public void refreshRestaurantList() {
-        restaurantListLoadingState.setValue(RestaurantListLoadingState.loading);
+        loadingState.setValue(LoadingStates.loading);
 
         // get last local update date
         Long lastUpdateDate = MyApplication.getContext().getSharedPreferences("TAG", Context.MODE_PRIVATE).getLong("RestaurantsLastUpdateDate", 0);
@@ -113,7 +122,50 @@ public class Model {
                         //return all data to caller
                         List<Restaurant> stList = AppLocalDb.db.restaurantDao().getAll();
                         restaurantList.postValue(stList);
-                        restaurantListLoadingState.postValue(RestaurantListLoadingState.loaded);
+                        loadingState.postValue(LoadingStates.loaded);
+                    }
+                });
+            }
+        });
+    }
+
+    public void refreshRestaurantReviews() {
+        loadingState.setValue(LoadingStates.loading);
+
+        // get last local update date
+        Long reviewsLastUpdateDate = MyApplication.getContext().getSharedPreferences("TAG", Context.MODE_PRIVATE).getLong("ReviewsLastUpdateDate", 0);
+
+        executor.execute(() -> {
+            List<Review> stList = AppLocalDb.db.reviewDao().getAll();
+            restaurantReviews.postValue(stList);
+        });
+        // firebase get all updates since lastLocalUpdateDate
+        modelFirebase.getAllRestaurants(reviewsLastUpdateDate, new ModelFirebase.GetAllRestaurantsListener() {
+            @Override
+            public void onComplete(List<Restaurant> list) {
+                // add all records to the local db
+                executor.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        Long lud = new Long(0);
+                        Log.d("TAG", "fb returned " + list.size());
+                        for (Restaurant restaurant : list) {
+                            AppLocalDb.db.restaurantDao().insertAll(restaurant);
+                            if (lud < restaurant.getUpdateDate()) {
+                                lud = restaurant.getUpdateDate();
+                            }
+                        }
+                        // update last local update date
+                        MyApplication.getContext()
+                                .getSharedPreferences("TAG", Context.MODE_PRIVATE)
+                                .edit()
+                                .putLong("RestaurantsLastUpdateDate", lud)
+                                .commit();
+
+                        //return all data to caller
+                        List<Restaurant> stList = AppLocalDb.db.restaurantDao().getAll();
+                        restaurantList.postValue(stList);
+                        loadingState.postValue(LoadingStates.loaded);
                     }
                 });
             }
