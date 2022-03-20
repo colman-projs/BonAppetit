@@ -1,7 +1,5 @@
 package com.example.BonAppetit.feed;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -12,7 +10,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
-
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 
@@ -45,7 +43,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        setHasOptionsMenu(true);
         viewModel = new ViewModelProvider(this).get(RestaurantListRvViewModel.class);
     }
 
@@ -77,15 +74,24 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
     @Override
     public void onInfoWindowClick(Marker marker) {
-        Restaurant restaurant = (Restaurant) marker.getTag();
+        /*
+         * Handle InfoWindowClick click event on MAP -> Navigate to current restaurant
+         */
+        String restaurantId = (String) marker.getTag();
 
-//        if (restaurant != null) {
-//            NavDirections direction = ProblemsOnMapFragmentDirections.actionProblemsOnMapFragmentToProblemDetailsFragment(problem);
-//            Navigation.findNavController(view).navigate(direction);
-//        }
+        if (restaurantId != null) {
+            Navigation
+                    .findNavController(this.getView())
+                    .navigate(MapsFragmentDirections.actionMapsFragmentToRestaurantReviewsFragment(restaurantId));
+
+        }
     }
 
     private void setCurrentLocation() {
+        /*
+         * Request location permission, so that we can get the location of the
+         * device. If permission is granted so move map to current location
+         */
         if (ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             fusedLocationClient.getLastLocation()
@@ -99,12 +105,17 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
                     });
         } else {
-            requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+            //Request for location permission
+            ActivityCompat.requestPermissions(getActivity(),
+                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                     PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
         }
     }
 
     private void moveMap(double latitude, double longitude) {
+        /*
+         * Move map to current device location
+         */
         if (map != null) {
             LatLng latLng = new LatLng(latitude, longitude);
             map.animateCamera(CameraUpdateFactory.newLatLng(latLng));
@@ -114,6 +125,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     }
 
     private void addMarkers(List<Restaurant> restaurants) {
+        /*
+         * Add markers in the map , based on restaurants locations
+         */
         for (Restaurant restaurant : restaurants) {
             LatLng latLng = new LatLng(restaurant.getLatitude(), restaurant.getLongitude());
             map.addMarker(new MarkerOptions().position(latLng)
