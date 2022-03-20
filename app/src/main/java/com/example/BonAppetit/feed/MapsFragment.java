@@ -1,18 +1,27 @@
 package com.example.BonAppetit.feed;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-
+import android.content.Context;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
+
 import android.view.LayoutInflater;
+
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.BonAppetit.R;
+
+import com.example.BonAppetit.model.Restaurant;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -20,108 +29,111 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.example.BonAppetit.R;
 
-import java.util.ArrayList;
+import java.util.List;
 
-public class MapsFragment extends Fragment {
+public class MapsFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
+    private View view;
+    private GoogleMap map;
+    private final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
+    private FusedLocationProviderClient fusedLocationClient;
+    private RestaurantListRvViewModel viewModel;
+    private LiveData<List<Restaurant>> liveData;
 
-    private boolean locationPermissionGranted;
-    private static final int DEFAULT_ZOOM = 15;
-    private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        viewModel = new ViewModelProvider(this).get(RestaurantListRvViewModel.class);
+    }
 
-    //TODO: Get resturants details and put in in the map.
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        view = inflater.inflate(R.layout.fragment_maps, container, false);
 
-    // below are the latitude and longitude
-    // of 4 different locations.,,
-    LatLng carmel_market = new LatLng(32.06964105711388, 34.76896914543392); // carmel market
-    LatLng vitrina_tel_aviv = new LatLng(32.062233374685995, 34.77184962122501); // vitrina tel-aviv
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
 
-    // creating array list for adding all our locations.
-    private ArrayList<LatLng> locationArrayList;
+        liveData = viewModel.getData();
 
-    private OnMapReadyCallback callback = new OnMapReadyCallback() {
+        return view;
+    }
 
-        /**
-         * Manipulates the map once available.
-         * This callback is triggered when the map is ready to be used.
-         * This is where we can add markers or lines, add listeners or move the camera.
-         * In this case, we just add a marker near Sydney, Australia.
-         * If Google Play services is not installed on the device, the user will be prompted to
-         * install it inside the SupportMapFragment. This method will only be triggered once the
-         * user has installed Google Play services and returned to the app.
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        map = googleMap;
+        map.setOnInfoWindowClickListener(this);
+        setCurrentLocation();
+
+        liveData.observe(getViewLifecycleOwner() , (restaurants) -> {
+            addMarkers(restaurants);
+        });
+    }
+
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        /*
+         * Handle InfoWindowClick click event on MAP -> Navigate to current restaurant
          */
-        @Override
-        public void onMapReady(GoogleMap googleMap) {
+        String restaurantId = (String) marker.getTag();
 
-            // in below line we are initializing our array list.
-            locationArrayList = new ArrayList<>();
+        if (restaurantId != null) {
+            Navigation
+                    .findNavController(this.getView())
+                    .navigate(MapsFragmentDirections.actionMapsFragmentToRestaurantReviewsFragment(restaurantId));
 
-            // on below line we are adding our
-            // locations in our array list.
-            locationArrayList.add(carmel_market);
-            locationArrayList.add(vitrina_tel_aviv);
-
-
-            for (int i = 0; i < locationArrayList.size(); i++) {
-
-                // below line is use to add marker to each location of our array list.
-                googleMap.addMarker(new MarkerOptions().position(locationArrayList.get(i)).title("Marker"));
-
-                // below lin is use to zoom our camera on map.
-                googleMap.animateCamera(CameraUpdateFactory.zoomTo(18.0f));
-
-                // below line is use to move our camera to the specific location.
-                googleMap.moveCamera(CameraUpdateFactory.newLatLng(locationArrayList.get(i)));
-            }
-
-            getLocationPermission();
-            googleMap.setOnMarkerClickListener((e)->{
-                setOnMarkerClickListener(e);
-                return true;
-            });
-        }
-    };
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_maps, container, false);
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        SupportMapFragment mapFragment =
-                (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
-        if (mapFragment != null) {
-            mapFragment.getMapAsync(callback);
         }
     }
 
-
-    private void getLocationPermission() {
+    private void setCurrentLocation() {
         /*
          * Request location permission, so that we can get the location of the
-         * device. The result of the permission request is handled by a callback,
-         * onRequestPermissionsResult.
+         * device. If permission is granted so move map to current location
          */
-        if (ContextCompat.checkSelfPermission(this.getContext(),
-                android.Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-            locationPermissionGranted = true;
+        if (ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            fusedLocationClient.getLastLocation()
+                    .addOnSuccessListener(getActivity(), location -> {
+                        // Got last known location. In some rare situations, this can be null.
+                        if (location != null) {
+                            map.setMyLocationEnabled(true);
+                            map.getUiSettings().setMyLocationButtonEnabled(true);
+                            moveMap(location.getLatitude(), location.getLongitude());
+                        }
+
+                    });
         } else {
+            //Request for location permission
             ActivityCompat.requestPermissions(getActivity(),
                     new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                     PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
         }
     }
 
-    // TODO: intent to resturant details
-    public void setOnMarkerClickListener(Marker mark){
-
+    private void moveMap(double latitude, double longitude) {
+        /*
+         * Move map to current device location
+         */
+        if (map != null) {
+            LatLng latLng = new LatLng(latitude, longitude);
+            map.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12));
+            map.getUiSettings().setZoomControlsEnabled(true);
+        }
     }
 
+    private void addMarkers(List<Restaurant> restaurants) {
+        /*
+         * Add markers in the map , based on restaurants locations
+         */
+        for (Restaurant restaurant : restaurants) {
+            LatLng latLng = new LatLng(restaurant.getLatitude(), restaurant.getLongitude());
+            map.addMarker(new MarkerOptions().position(latLng)
+                    .title(restaurant.getName())
+                    .snippet(restaurant.getDescription()))
+                    .setTag(restaurant.getId());
+        }
+    }
 }
