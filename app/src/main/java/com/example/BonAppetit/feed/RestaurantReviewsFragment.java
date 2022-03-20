@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -105,6 +106,7 @@ public class RestaurantReviewsFragment extends Fragment {
     class MyViewHolder extends RecyclerView.ViewHolder {
         ImageView userImageImv;
         TextView nameTv;
+        RatingBar rateRb;
         TextView dateTv;
         TextView descTv;
         ImageView imageImv;
@@ -113,6 +115,7 @@ public class RestaurantReviewsFragment extends Fragment {
             super(itemView);
             userImageImv = itemView.findViewById(R.id.review_listrow_user_image_imv);
             nameTv = itemView.findViewById(R.id.review_listrow_name_tv);
+            rateRb = itemView.findViewById(R.id.review_listrow_rate_bar);
             dateTv = itemView.findViewById(R.id.review_listrow_date_tv);
             descTv = itemView.findViewById(R.id.review_listrow_description_tv);
             imageImv = itemView.findViewById(R.id.review_listrow_image_imv);
@@ -131,6 +134,7 @@ public class RestaurantReviewsFragment extends Fragment {
             Date reviewDate = new Date(review.getUpdateDate() * 1000);
             DateFormat df = new SimpleDateFormat("dd:MM:yyyy HH:mm:ss");
             dateTv.setText(df.format(reviewDate));
+            rateRb.setRating(review.getRating());
             if (review.getImageUrl() != null) {
                 Picasso.get()
                         .load(review.getImageUrl())
