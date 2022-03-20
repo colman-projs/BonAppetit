@@ -36,10 +36,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
             android:text="TextView"
             android:textSize="20sp"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/review_listrow_rate_bar"
             app:layout_constraintStart_toEndOf="@+id/review_listrow_user_image_imv"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -78,5 +77,20 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/review_listrow_description_tv" />
+
+        <RatingBar
+            android:id="@+id/review_listrow_rate_bar"
+            style="@android:style/Widget.DeviceDefault.Light.RatingBar.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:numStars="5"
+            android:rating="0"
+            android:stepSize="1"
+            app:layout_constraintBottom_toTopOf="@+id/review_listrow_date_tv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>
