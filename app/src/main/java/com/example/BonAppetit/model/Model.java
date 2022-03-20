@@ -122,6 +122,10 @@ public class Model {
         modelFirebase.getUserLogin(mail, password, listener);
     }
 
+    public void getUserById(String id, GetUserLoginListener listener) {
+        modelFirebase.getUserById(id, listener);
+    }
+
     public interface GetUserExistsListener {
         void onComplete(boolean exists);
     }

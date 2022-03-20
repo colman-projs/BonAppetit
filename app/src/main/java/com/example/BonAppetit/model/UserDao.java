@@ -14,6 +14,9 @@ public interface UserDao {
     @Query("select * from User where mail = :mail and password = :password")
     User findByLogin(String mail, String password);
 
+    @Query("select * from User where id = :id")
+    User getUserById(String id);
+
     @Query("select * from User")
     List<User> getAll();
 
