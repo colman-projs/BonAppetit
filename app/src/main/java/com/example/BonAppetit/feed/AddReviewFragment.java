@@ -1,16 +1,13 @@
 package com.example.BonAppetit.feed;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -19,6 +16,7 @@ import android.widget.ProgressBar;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import com.example.BonAppetit.R;
 import com.example.BonAppetit.model.Model;
@@ -27,13 +25,13 @@ import com.example.BonAppetit.model.Review;
 public class AddReviewFragment extends Fragment {
     private static final int REQUEST_CAMERA = 1;
     EditText nameEt;
-    EditText idEt;
-    CheckBox cb;
+    ImageView imageImv;
+    EditText descEt;
+
     Button saveBtn;
     Button cancelBtn;
     ProgressBar progressBar;
     Bitmap imageBitmap;
-    ImageView avatarImv;
     ImageButton camBtn;
     ImageButton galleryBtn;
 
@@ -42,31 +40,21 @@ public class AddReviewFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_add_review, container, false);
         nameEt = view.findViewById(R.id.main_name_et);
-        idEt = view.findViewById(R.id.main_id_et);
-        cb = view.findViewById(R.id.main_cb);
+        descEt = view.findViewById(R.id.main_desc_et);
         saveBtn = view.findViewById(R.id.main_save_btn);
         cancelBtn = view.findViewById(R.id.main_cancel_btn);
         progressBar = view.findViewById(R.id.main_progressbar);
         progressBar.setVisibility(View.GONE);
-        avatarImv = view.findViewById(R.id.main_avatar_imv);
+        imageImv = view.findViewById(R.id.main_image_imv);
 
-        saveBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                save();
-            }
-        });
+        saveBtn.setOnClickListener(v -> save());
 
         camBtn = view.findViewById(R.id.main_cam_btn);
         galleryBtn = view.findViewById(R.id.main_gallery_btn);
 
-        camBtn.setOnClickListener(v -> {
-            openCam();
-        });
+        camBtn.setOnClickListener(v -> openCam());
 
-        galleryBtn.setOnClickListener(v -> {
-            openGallery();
-        });
+        galleryBtn.setOnClickListener(v -> openGallery());
         return view;
     }
 
@@ -75,20 +63,7 @@ public class AddReviewFragment extends Fragment {
 
     private void openCam() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(intent, REQUEST_CAMERA);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CAMERA) {
-            if (resultCode == Activity.RESULT_OK) {
-                Bundle extras = data.getExtras();
-                imageBitmap = (Bitmap) extras.get("data");
-                avatarImv.setImageBitmap(imageBitmap);
-
-            }
-        }
+//        startActivityForResult(intent,REQUEST_CAMERA);
     }
 
     private void save() {
@@ -99,25 +74,21 @@ public class AddReviewFragment extends Fragment {
         galleryBtn.setEnabled(false);
 
         String name = nameEt.getText().toString();
-        String id = idEt.getText().toString();
-        boolean flag = cb.isChecked();
-        Log.d("TAG", "saved name:" + name + " id:" + id + " flag:" + flag);
-        Review review = new Review(1, 1, name, 1);
-        if (imageBitmap == null) {
-
-            // TODO: Add review to restaurant
-//            addReview(review,()->{
-//                Navigation.findNavController(nameEt).navigateUp();
-//            });
-        } else {
-            Model.instance.saveUserImage(imageBitmap, id + ".jpg", url -> {
-                review.setImageUrl(url);
-
-                // TODO: Add review to restaurant
-//                Model.instance.addReview(review,()->{
-//                    Navigation.findNavController(nameEt).navigateUp();
-//                });
-            });
-        }
+        String desc = descEt.getText().toString();
+        Double latitude = 0.0,
+                longitude = 0.0;
+        Review review = new Review();
+        Model.instance.addRestaurantReview(review, () -> {
+            if (imageBitmap != null) {
+                Model.instance.saveRestaurantImage(imageBitmap, review.getId() + ".jpg", url -> {
+                    review.setImageUrl(url);
+                    Model.instance.updateReview(review, () ->
+                            Navigation.findNavController(nameEt).navigateUp()
+                    );
+                });
+            } else {
+                Navigation.findNavController(nameEt).navigateUp();
+            }
+        });
     }
 }

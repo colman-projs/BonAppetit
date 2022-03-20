@@ -27,6 +27,31 @@ public class Model {
         loadingState.setValue(LoadingStates.loaded);
     }
 
+    private void onComplete(List<Restaurant> list) {
+        // add all records to the local db
+        executor.execute(() -> {
+            Long lud = Long.valueOf(0);
+            Log.d("TAG", "fb returned " + list.size());
+            for (Restaurant restaurant : list) {
+                AppLocalDb.db.restaurantDao().insertAll(restaurant);
+                if (lud < restaurant.getUpdateDate()) {
+                    lud = restaurant.getUpdateDate();
+                }
+            }
+            // update last local update date
+            MyApplication.getContext()
+                    .getSharedPreferences("TAG", Context.MODE_PRIVATE)
+                    .edit()
+                    .putLong("RestaurantsLastUpdateDate", lud)
+                    .commit();
+
+            //return all data to caller
+            List<Restaurant> stList = AppLocalDb.db.restaurantDao().getAll();
+            restaurantList.postValue(stList);
+            loadingState.postValue(LoadingStates.loaded);
+        });
+    }
+
     public interface GetUserLoginListener {
         void onComplete(User user);
     }
@@ -43,16 +68,8 @@ public class Model {
         modelFirebase.getIfUserExists(email, listener);
     }
 
-
-    public interface AddListener {
-        void onComplete();
-    }
-
-
     public void registerUser(User user, AddListener listener) {
-        modelFirebase.registerUser(user, () -> {
-            listener.onComplete();
-        });
+        modelFirebase.registerUser(user, () -> listener.onComplete());
     }
 
     public enum LoadingStates {
@@ -60,14 +77,14 @@ public class Model {
         loaded
     }
 
-    MutableLiveData<LoadingStates> loadingState = new MutableLiveData<LoadingStates>();
+    MutableLiveData<LoadingStates> loadingState = new MutableLiveData<>();
 
     public LiveData<LoadingStates> getListLoadingState() {
         return loadingState;
     }
 
-    MutableLiveData<List<Restaurant>> restaurantList = new MutableLiveData<List<Restaurant>>();
-    MutableLiveData<List<Review>> restaurantReviews = new MutableLiveData<List<Review>>();
+    MutableLiveData<List<Restaurant>> restaurantList = new MutableLiveData<>();
+    MutableLiveData<List<Review>> restaurantReviews = new MutableLiveData<>();
 
     public LiveData<List<Restaurant>> getAll() {
         if (restaurantList.getValue() == null) {
@@ -97,36 +114,7 @@ public class Model {
         });
 
         // firebase get all updates since lastLocalUpdateDate
-        modelFirebase.getAllRestaurants(lastUpdateDate, new ModelFirebase.GetAllRestaurantsListener() {
-            @Override
-            public void onComplete(List<Restaurant> list) {
-                // add all records to the local db
-                executor.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        Long lud = new Long(0);
-                        Log.d("TAG", "fb returned " + list.size());
-                        for (Restaurant restaurant : list) {
-                            AppLocalDb.db.restaurantDao().insertAll(restaurant);
-                            if (lud < restaurant.getUpdateDate()) {
-                                lud = restaurant.getUpdateDate();
-                            }
-                        }
-                        // update last local update date
-                        MyApplication.getContext()
-                                .getSharedPreferences("TAG", Context.MODE_PRIVATE)
-                                .edit()
-                                .putLong("RestaurantsLastUpdateDate", lud)
-                                .commit();
-
-                        //return all data to caller
-                        List<Restaurant> stList = AppLocalDb.db.restaurantDao().getAll();
-                        restaurantList.postValue(stList);
-                        loadingState.postValue(LoadingStates.loaded);
-                    }
-                });
-            }
-        });
+        modelFirebase.getAllRestaurants(lastUpdateDate, this::onComplete);
     }
 
     public void refreshRestaurantReviews() {
@@ -140,42 +128,44 @@ public class Model {
             restaurantReviews.postValue(stList);
         });
         // firebase get all updates since lastLocalUpdateDate
-        modelFirebase.getAllRestaurants(reviewsLastUpdateDate, new ModelFirebase.GetAllRestaurantsListener() {
-            @Override
-            public void onComplete(List<Restaurant> list) {
-                // add all records to the local db
-                executor.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        Long lud = new Long(0);
+        modelFirebase.getAllRestaurantReviews(reviewsLastUpdateDate,
+                list -> {
+                    // add all records to the local db
+                    executor.execute(() -> {
+                        Long lud = Long.valueOf(0);
                         Log.d("TAG", "fb returned " + list.size());
-                        for (Restaurant restaurant : list) {
-                            AppLocalDb.db.restaurantDao().insertAll(restaurant);
-                            if (lud < restaurant.getUpdateDate()) {
-                                lud = restaurant.getUpdateDate();
+                        for (Review review : list) {
+                            AppLocalDb.db.reviewDao().insertAll(review);
+                            if (lud < review.getUpdateDate()) {
+                                lud = review.getUpdateDate();
                             }
                         }
                         // update last local update date
                         MyApplication.getContext()
                                 .getSharedPreferences("TAG", Context.MODE_PRIVATE)
                                 .edit()
-                                .putLong("RestaurantsLastUpdateDate", lud)
+                                .putLong("ReviewsLastUpdateDate", lud)
                                 .commit();
 
                         //return all data to caller
-                        List<Restaurant> stList = AppLocalDb.db.restaurantDao().getAll();
-                        restaurantList.postValue(stList);
+                        List<Review> stList = AppLocalDb.db.reviewDao().getAll();
+                        restaurantReviews.postValue(stList);
                         loadingState.postValue(LoadingStates.loaded);
-                    }
+                    });
                 });
-            }
-        });
     }
 
     public void addRestaurant(Restaurant restaurant, AddListener listener) {
         modelFirebase.addRestaurant(restaurant, () -> {
             listener.onComplete();
             refreshRestaurantList();
+        });
+    }
+
+    public void addRestaurantReview(Review review, AddListener listener) {
+        modelFirebase.addRestaurantReview(review, () -> {
+            listener.onComplete();
+            refreshRestaurantReviews();
         });
     }
 
@@ -186,28 +176,21 @@ public class Model {
         });
     }
 
-//--------------------------------------------------------------------------------------------------
-
-    public interface AddStudentListener {
-        void onComplete();
-    }
-
-    public void addStudent(Student student, AddStudentListener listener) {
-        modelFirebase.addStudent(student, () -> {
+    public void updateReview(Review review, AddListener listener) {
+        modelFirebase.updateReview(review, () -> {
             listener.onComplete();
-            refreshRestaurantList();
+            refreshRestaurantReviews();
         });
     }
 
-    public interface GetStudentById {
-        void onComplete(Student student);
+    public interface AddListener {
+        void onComplete();
     }
 
-    public void getStudentById(String studentId, GetStudentById listener) {
-        modelFirebase.getStudentById(studentId, listener);
-//        return null;
+    public interface getReviewById {
+        void onComplete(Review review);
     }
-
+//--------------------------------------------------------------------------------------------------
 
     public interface SaveImageListener {
         void onComplete(String url);
