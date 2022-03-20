@@ -1,11 +1,20 @@
 package com.example.BonAppetit.login;
 
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
+
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.util.Patterns;
@@ -14,6 +23,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.BonAppetit.R;
@@ -26,6 +37,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.UUID;
 
 public class RegisterFragment extends Fragment {
@@ -34,6 +47,9 @@ public class RegisterFragment extends Fragment {
     EditText email;
     EditText phone;
     EditText password;
+    ImageButton editPicButton;
+    ImageView userPicture;
+    boolean picUploaded = false;
 
     private FirebaseAuth mAuth;
 
@@ -47,8 +63,17 @@ public class RegisterFragment extends Fragment {
         email = view.findViewById(R.id.editTextEmail);
         phone = view.findViewById(R.id.editTextPhone);
         password = view.findViewById(R.id.editTextPassword);
+        editPicButton = view.findViewById(R.id.register_profile_pic_edit);
+        userPicture = view.findViewById(R.id.register_profile_pic);
 
         registerButton.setOnClickListener(v -> register());
+
+        editPicButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                uploadPicture();
+            }
+        });
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -68,22 +93,28 @@ public class RegisterFragment extends Fragment {
         String pass = password.getText().toString();
 
         mAuth.createUserWithEmailAndPassword(mail, pass).addOnCompleteListener(task -> {
-
             if (task.isSuccessful()) {
                 FirebaseUser userAuth = mAuth.getCurrentUser();
-                user.setId(userAuth.getUid());
-                user.setFirstName(firstName.getText().toString());
-                user.setLastName(lastName.getText().toString());
-                user.setMail(email.getText().toString());
-                user.setPassword(password.getText().toString());
 
-                Model.instance.registerUser(user, () -> {
-                    ((BaseActivity) getActivity()).setLoading(false);
+                BitmapDrawable drawable = (BitmapDrawable) userPicture.getDrawable();
+                Bitmap bitmap = drawable.getBitmap();
 
-                    Toast.makeText(getActivity(), "Registration successful", Toast.LENGTH_LONG).show();
+                Model.instance.saveUserImage(bitmap, userAuth.getUid() + ".jpg", url -> {
+                    user.setId(userAuth.getUid());
+                    user.setFirstName(firstName.getText().toString());
+                    user.setLastName(lastName.getText().toString());
+                    user.setMail(email.getText().toString());
+                    user.setAvatarUrl(url);
 
-                    Navigation.findNavController(getView())
-                            .navigate(R.id.action_registerFragment_to_restaurantListRvFragment);
+                    Model.instance.registerUser(user, () -> {
+                        ((BaseActivity) getActivity()).setLoading(false);
+
+                        Toast.makeText(getActivity(), "Registration successful", Toast.LENGTH_LONG).show();
+
+                        Navigation.findNavController(getView())
+                                .navigate(R.id.action_registerFragment_to_restaurantListRvFragment);
+                        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+                    });
                 });
             } else {
                 ((BaseActivity) getActivity()).setLoading(false);
@@ -127,6 +158,29 @@ public class RegisterFragment extends Fragment {
             valid = false;
         }
 
+        if (!picUploaded) {
+            Toast.makeText(getContext(), "Take a profile picture", Toast.LENGTH_SHORT).show();
+            valid = false;
+        }
+
         return valid;
+    }
+
+    private void uploadPicture() {
+        Intent takePicture = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(takePicture, 0);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_CANCELED) return;
+
+        if (resultCode == RESULT_OK && data != null) {
+            Bitmap selectedImage = (Bitmap) data.getExtras().get("data");
+
+            userPicture.setImageBitmap(selectedImage);
+            picUploaded = true;
+        }
+
     }
 }
