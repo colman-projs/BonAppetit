@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -44,6 +45,16 @@ public class RestaurantTypesFragment extends Fragment {
         list.setHasFixedSize(true);
 
         list.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        adapter = new MyAdapter();
+        list.setAdapter(adapter);
+
+        adapter.setOnItemClickListener((v, position) -> {
+            String stId = viewModel.getData().getValue().get(position).getId();
+            Navigation
+                    .findNavController(v)
+                    .navigate(RestaurantListRvFragmentDirections.actionRestaurantListRvFragmentToRestaurantReviewsFragment(stId));
+        });
 
         setHasOptionsMenu(true);
         viewModel.getData().observe(getViewLifecycleOwner(), list1 -> refresh());
