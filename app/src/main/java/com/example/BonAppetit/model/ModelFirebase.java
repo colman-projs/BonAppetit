@@ -98,6 +98,10 @@ public class ModelFirebase {
         void onComplete(List<Review> list);
     }
 
+    public interface GetAllRestaurantsTypesListener {
+        void onComplete(List<RestaurantType> list);
+    }
+
     public void getAllRestaurants(Long lastUpdateDate, GetAllRestaurantsListener listener) {
         db.collection(Restaurant.COLLECTION_NAME)
                 .whereGreaterThanOrEqualTo("updateDate", new Timestamp(lastUpdateDate, 0))
@@ -148,6 +152,22 @@ public class ModelFirebase {
                 });
     }
 
+    public void getAllRestaurantTypes(Long lastUpdateDate, GetAllRestaurantsTypesListener listener) {
+        db.collection(RestaurantType.COLLECTION_NAME)
+                .whereGreaterThanOrEqualTo("updateDate", new Timestamp(lastUpdateDate, 0))
+                .get()
+                .addOnCompleteListener(task -> {
+                    List<RestaurantType> list = new LinkedList<>();
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot doc : task.getResult()) {
+                            RestaurantType type = RestaurantType.create(doc.getData());
+                            list.add(type);
+                        }
+                    }
+                    listener.onComplete(list);
+                });
+    }
+
     public void addRestaurant(Restaurant restaurant, Model.AddListener listener) {
         DocumentReference documentReference = db.collection(Restaurant.COLLECTION_NAME)
                 .document();
@@ -192,7 +212,7 @@ public class ModelFirebase {
                 .get()
                 .addOnCompleteListener(task -> {
                     Review review = null;
-                    if (task.isSuccessful() & task.getResult()!= null){
+                    if (task.isSuccessful() & task.getResult() != null) {
                         review = Review.create(Objects.requireNonNull(task.getResult().getData()));
                     }
                     listener.onComplete(review);
