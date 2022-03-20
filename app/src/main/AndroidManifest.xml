@@ -18,21 +18,17 @@
             android:value="AIzaSyA01qL5_frCoK12gKomFxVKW9qgFt3A2k4" />
 
         <activity
-            android:name=".login.LoginActivity"
-            android:exported="false" />
-        <activity
-            android:name=".IntroActivity"
+            android:name=".feed.BaseActivity"
             android:exported="true"
-            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
+            android:theme="@style/Theme.BonAppetit">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
-        <activity
-            android:name=".feed.BaseActivity"
-            android:exported="true"></activity>
+
     </application>
 
 </manifest>
