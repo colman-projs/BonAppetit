@@ -142,8 +142,10 @@ public class Restaurant {
         Object rate = json.get("avgRate");
         Double avgRate = rate.getClass() == Long.class ? ((Long)rate).doubleValue() : (Double)rate;
         String imageUrl = (String)json.get("imageUrl");
-        Double latitude = (Double) json.get("latitude");
-        Double longitude = (Double)json.get("longitude");
+        Object lat = json.get("latitude");
+        Double latitude = lat.getClass() == Long.class ? ((Long)lat).doubleValue() : (Double)lat;
+        Object lng = json.get("longitude");
+        Double longitude = lng.getClass() == Long.class ? ((Long)lng).doubleValue() : (Double)lng;
         boolean deleted = (boolean)json.get("deleted");
         Timestamp ts = (Timestamp)json.get("updateDate");
         Long updateDate = ts.getSeconds();
