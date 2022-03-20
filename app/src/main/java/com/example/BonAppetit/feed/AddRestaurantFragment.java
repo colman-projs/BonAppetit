@@ -3,6 +3,7 @@ package com.example.BonAppetit.feed;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
@@ -23,8 +24,12 @@ import com.example.BonAppetit.R;
 import com.example.BonAppetit.model.Model;
 import com.example.BonAppetit.model.Restaurant;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+
 public class AddRestaurantFragment extends Fragment {
     private static final int REQUEST_CAMERA = 1;
+    private static final int REQUEST_GALLERY = 2;
     EditText nameEt;
     ImageView imageImv;
     EditText descEt;
@@ -60,6 +65,8 @@ public class AddRestaurantFragment extends Fragment {
     }
 
     private void openGallery() {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(intent,REQUEST_GALLERY);
     }
 
     private void openCam() {
@@ -76,6 +83,14 @@ public class AddRestaurantFragment extends Fragment {
                 imageBitmap = (Bitmap) extras.get("data");
                 imageImv.setImageBitmap(imageBitmap);
 
+            }
+        } else if (requestCode == REQUEST_GALLERY){
+            try {
+                InputStream inputStream = getActivity().getContentResolver().openInputStream(data.getData());
+                imageBitmap  = BitmapFactory.decodeStream(inputStream);
+                imageImv.setImageBitmap(imageBitmap);
+            }catch (FileNotFoundException e){
+                e.printStackTrace();
             }
         }
     }
