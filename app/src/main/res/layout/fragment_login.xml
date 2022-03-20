@@ -21,7 +21,8 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="@string/welcome_to_app"
-            android:textSize="24sp" />
+            android:textSize="24sp"
+            android:textColor="@color/blue_500"/>
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
@@ -57,9 +58,17 @@
             android:id="@+id/login_login_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="end"
+            android:layout_gravity="center"
             android:layout_marginTop="16dp"
+            android:layout_marginBottom="64dp"
             android:text="@string/login" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/login_register_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
+            android:text="@string/register" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
