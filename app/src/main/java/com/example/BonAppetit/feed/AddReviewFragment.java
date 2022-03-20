@@ -1,5 +1,6 @@
 package com.example.BonAppetit.feed;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -63,7 +64,20 @@ public class AddReviewFragment extends Fragment {
 
     private void openCam() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//        startActivityForResult(intent,REQUEST_CAMERA);
+        startActivityForResult(intent,REQUEST_CAMERA);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CAMERA){
+            if (resultCode == Activity.RESULT_OK){
+                Bundle extras = data.getExtras();
+                imageBitmap = (Bitmap) extras.get("data");
+                imageImv.setImageBitmap(imageBitmap);
+
+            }
+        }
     }
 
     private void save() {
