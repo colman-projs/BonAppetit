@@ -18,12 +18,15 @@
         <entry key="..\:/Users/-/.android/studio/Projects/BonAppetit/app/src/main/res/layout/fragment_restaurant_details.xml" value="0.13020833333333334" />
         <entry key="..\:/Users/-/.android/studio/Projects/BonAppetit/app/src/main/res/layout/fragment_restaurant_reviews.xml" value="0.13020833333333334" />
         <entry key="..\:/Users/-/.android/studio/Projects/BonAppetit/app/src/main/res/layout/fragment_restaurants_list.xml" value="0.12760416666666666" />
+        <entry key="..\:/Users/-/.android/studio/Projects/BonAppetit/app/src/main/res/layout/fragment_restaurants_types.xml" value="0.13020833333333334" />
         <entry key="..\:/Users/-/.android/studio/Projects/BonAppetit/app/src/main/res/layout/fragment_student_details.xml" value="0.13020833333333334" />
         <entry key="..\:/Users/-/.android/studio/Projects/BonAppetit/app/src/main/res/layout/fragment_students_list.xml" value="0.13020833333333334" />
         <entry key="..\:/Users/-/.android/studio/Projects/BonAppetit/app/src/main/res/layout/restaurant_list_row.xml" value="0.13020833333333334" />
+        <entry key="..\:/Users/-/.android/studio/Projects/BonAppetit/app/src/main/res/layout/restaurant_type_row.xml" value="0.17291666666666666" />
         <entry key="..\:/Users/-/.android/studio/Projects/BonAppetit/app/src/main/res/layout/student_list_row.xml" value="0.13020833333333334" />
         <entry key="..\:/Users/-/.android/studio/Projects/BonAppetit/app/src/main/res/menu/base_menu.xml" value="0.2" />
         <entry key="..\:/Users/-/.android/studio/Projects/BonAppetit/app/src/main/res/menu/login_menu.xml" value="0.13020833333333334" />
+        <entry key="..\:/Users/-/.android/studio/Projects/BonAppetit/app/src/main/res/menu/restaurant_list_menu.xml" value="0.1" />
         <entry key="..\:/Users/-/.android/studio/Projects/BonAppetit/app/src/main/res/menu/restaurant_reviews_menu.xml" value="0.13020833333333334" />
         <entry key="..\:/Users/-/.android/studio/Projects/BonAppetit/app/src/main/res/menu/student_list_menu.xml" value="0.13020833333333334" />
         <entry key="..\:/Users/-/.android/studio/Projects/BonAppetit/app/src/main/res/mipmap-anydpi-v26/food_placeholder.xml" value="0.14635416666666667" />
