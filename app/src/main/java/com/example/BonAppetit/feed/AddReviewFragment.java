@@ -3,8 +3,10 @@ package com.example.BonAppetit.feed;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RatingBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,11 +27,15 @@ import com.example.BonAppetit.model.Model;
 import com.example.BonAppetit.model.Review;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+
 public class AddReviewFragment extends Fragment {
     private static final int REQUEST_CAMERA = 1;
-    EditText nameEt;
+    private static final int REQUEST_GALLERY = 2;
     ImageView imageImv;
     EditText descEt;
+    RatingBar rateRb;
 
     Button saveBtn;
     Button cancelBtn;
@@ -37,17 +44,23 @@ public class AddReviewFragment extends Fragment {
     ImageButton camBtn;
     ImageButton galleryBtn;
 
+    String restaurantId;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        restaurantId = AddReviewFragmentArgs.fromBundle(getArguments()).getRestaurantId();
+        Log.d("TAG", "ADD review to " + restaurantId);
+
         View view = inflater.inflate(R.layout.fragment_add_review, container, false);
-        nameEt = view.findViewById(R.id.main_name_et);
-        descEt = view.findViewById(R.id.main_desc_et);
+        imageImv = view.findViewById(R.id.main_image_imv);
+        descEt = view.findViewById(R.id.review_description_et);
+        rateRb = view.findViewById(R.id.add_review_rate_bar);
         saveBtn = view.findViewById(R.id.main_save_btn);
         cancelBtn = view.findViewById(R.id.main_cancel_btn);
         progressBar = view.findViewById(R.id.main_progressbar);
         progressBar.setVisibility(View.GONE);
-        imageImv = view.findViewById(R.id.main_image_imv);
 
         saveBtn.setOnClickListener(v -> save());
 
@@ -61,6 +74,8 @@ public class AddReviewFragment extends Fragment {
     }
 
     private void openGallery() {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(intent,REQUEST_GALLERY);
     }
 
     private void openCam() {
@@ -78,6 +93,14 @@ public class AddReviewFragment extends Fragment {
                 imageImv.setImageBitmap(imageBitmap);
 
             }
+        } else if (requestCode == REQUEST_GALLERY){
+            try {
+                InputStream inputStream = getActivity().getContentResolver().openInputStream(data.getData());
+                imageBitmap  = BitmapFactory.decodeStream(inputStream);
+                imageImv.setImageBitmap(imageBitmap);
+            }catch (FileNotFoundException e){
+                e.printStackTrace();
+            }
         }
     }
 
@@ -88,24 +111,21 @@ public class AddReviewFragment extends Fragment {
         camBtn.setEnabled(false);
         galleryBtn.setEnabled(false);
 
-        String name = nameEt.getText().toString();
-        String desc = descEt.getText().toString();
-        Double latitude = 0.0,
-                longitude = 0.0;
-        String restaurantId = "", userId = "", description = "";
-//        FirebaseAuth.getInstance().getCurrentUser().getUid();
-        int rating = 0;
+        String description = descEt.getText().toString();
+        int rating = (int)rateRb.getRating();
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
         Review review = new Review(restaurantId, userId, description, rating);
         Model.instance.addRestaurantReview(review, () -> {
             if (imageBitmap != null) {
-                Model.instance.saveRestaurantImage(imageBitmap, review.getId() + ".jpg", url -> {
+                Model.instance.saveReviewImage(imageBitmap, review.getId() + ".jpg", url -> {
                     review.setImageUrl(url);
                     Model.instance.updateReview(review, () ->
-                            Navigation.findNavController(nameEt).navigateUp()
+                            Navigation.findNavController(descEt).navigateUp()
                     );
                 });
             } else {
-                Navigation.findNavController(nameEt).navigateUp();
+                Navigation.findNavController(descEt).navigateUp();
             }
         });
     }

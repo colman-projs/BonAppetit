@@ -154,7 +154,7 @@ public class RestaurantListRvFragment extends Fragment {
         if (item.getItemId() == R.id.addRestaurantFragment){
             Log.d("TAG","ADD...");
             return true;
-        } else if (item.getItemId() == R.id.addReviewFragment){
+        } else if (item.getItemId() == R.id.addReviewFragment1){
             Log.d("TAG","ADD...");
             return true;
         } else {

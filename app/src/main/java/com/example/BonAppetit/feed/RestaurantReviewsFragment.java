@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -26,7 +27,6 @@ import com.example.BonAppetit.R;
 import com.example.BonAppetit.model.Model;
 import com.example.BonAppetit.model.Restaurant;
 import com.example.BonAppetit.model.Review;
-import com.example.BonAppetit.model.User;
 import com.squareup.picasso.Picasso;
 
 import java.text.DateFormat;
@@ -40,6 +40,7 @@ public class RestaurantReviewsFragment extends Fragment {
 
     String restaurantId;
     ImageView restaurantImageImv;
+    TextView restaurantNameTv;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -56,6 +57,7 @@ public class RestaurantReviewsFragment extends Fragment {
         viewModel.changeRestaurantId(restaurantId);
 
         restaurantImageImv = view.findViewById(R.id.restaurant_detail_image_img);
+        restaurantNameTv = view.findViewById(R.id.restaurant_detail_name_tv);
 
         swipeRefresh = view.findViewById(R.id.restaurantreviews_swiperefresh);
         swipeRefresh.setOnRefreshListener(() -> Model.instance.refreshRestaurantReviews(restaurantId));
@@ -63,6 +65,7 @@ public class RestaurantReviewsFragment extends Fragment {
         Model.instance.getRestaurantById(restaurantId, new Model.GetRestaurantById() {
             @Override
             public void onComplete(Restaurant restaurant) {
+                restaurantNameTv.setText(restaurant.getName());
                 if (restaurant.getImageUrl() != null) {
                     Picasso.get().load(restaurant.getImageUrl()).into(restaurantImageImv);
                 }
@@ -201,7 +204,11 @@ public class RestaurantReviewsFragment extends Fragment {
         if (item.getItemId() == R.id.addRestaurantFragment) {
             Log.d("TAG", "ADD...");
             return true;
-        } else if (item.getItemId() == R.id.addReviewFragment) {
+        } else if (item.getItemId() == R.id.addReviewFragment1) {
+            String restaurantId = viewModel.getRestaurantId();
+
+            Navigation.findNavController(this.getView()).navigate(RestaurantReviewsFragmentDirections.actionRestaurantReviewsFragmentToAddReviewFragment(restaurantId));
+
             Log.d("TAG", "ADD...");
             return true;
         } else {
