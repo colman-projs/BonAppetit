@@ -46,6 +46,22 @@ public class ModelFirebase {
                 });
     }
 
+    public void getUserById(String id, Model.GetUserLoginListener listener) {
+        db.collection(User.COLLECTION_NAME)
+                .whereEqualTo("id", id)
+                .get()
+                .addOnCompleteListener(task -> {
+                    List<User> list = new LinkedList<>();
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot doc : task.getResult()) {
+                            User user = User.create(doc.getData());
+                            list.add(user);
+                        }
+                    }
+                    listener.onComplete(list.get(0));
+                });
+    }
+
     public void getIfUserExists(String email, Model.GetUserExistsListener listener) {
         db.collection(User.COLLECTION_NAME)
                 .whereEqualTo("mail", email)
@@ -61,12 +77,29 @@ public class ModelFirebase {
                 .addOnFailureListener(e -> listener.onComplete());
     }
 
+    public void getRestaurantById(String restaurantId, Model.GetRestaurantById listener) {
+        db.collection(Restaurant.COLLECTION_NAME)
+                .document(restaurantId)
+                .get()
+                .addOnCompleteListener(task -> {
+                    Restaurant restaurant = null;
+                    if (task.isSuccessful() & task.getResult()!= null){
+                        restaurant = Restaurant.create(Objects.requireNonNull(task.getResult().getData()));
+                    }
+                    listener.onComplete(restaurant);
+                });
+    }
+
     public interface GetAllRestaurantsListener {
         void onComplete(List<Restaurant> list);
     }
 
     public interface GetAllRestaurantsReviewsListener {
         void onComplete(List<Review> list);
+    }
+
+    public interface GetAllRestaurantsTypesListener {
+        void onComplete(List<RestaurantType> list);
     }
 
     public void getAllRestaurants(Long lastUpdateDate, GetAllRestaurantsListener listener) {
@@ -96,6 +129,39 @@ public class ModelFirebase {
                         for (QueryDocumentSnapshot doc : task.getResult()) {
                             Review review = Review.create(doc.getData());
                             list.add(review);
+                        }
+                    }
+                    listener.onComplete(list);
+                });
+    }
+
+    public void getReviewsByRestaurant(Long lastUpdateDate, String restaurantId, GetAllRestaurantsReviewsListener listener) {
+        db.collection(Review.COLLECTION_NAME)
+                .whereGreaterThanOrEqualTo("updateDate", new Timestamp(lastUpdateDate, 0))
+                .whereEqualTo("restaurantId", restaurantId)
+                .get()
+                .addOnCompleteListener(task -> {
+                    List<Review> list = new LinkedList<>();
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot doc : task.getResult()) {
+                            Review review = Review.create(doc.getData());
+                            list.add(review);
+                        }
+                    }
+                    listener.onComplete(list);
+                });
+    }
+
+    public void getAllRestaurantTypes(Long lastUpdateDate, GetAllRestaurantsTypesListener listener) {
+        db.collection(RestaurantType.COLLECTION_NAME)
+                .whereGreaterThanOrEqualTo("updateDate", new Timestamp(lastUpdateDate, 0))
+                .get()
+                .addOnCompleteListener(task -> {
+                    List<RestaurantType> list = new LinkedList<>();
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot doc : task.getResult()) {
+                            RestaurantType type = RestaurantType.create(doc.getData());
+                            list.add(type);
                         }
                     }
                     listener.onComplete(list);
@@ -146,7 +212,7 @@ public class ModelFirebase {
                 .get()
                 .addOnCompleteListener(task -> {
                     Review review = null;
-                    if (task.isSuccessful() & task.getResult()!= null){
+                    if (task.isSuccessful() & task.getResult() != null) {
                         review = Review.create(Objects.requireNonNull(task.getResult().getData()));
                     }
                     listener.onComplete(review);

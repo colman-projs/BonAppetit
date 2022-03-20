@@ -10,9 +10,15 @@ import java.util.List;
 
 public class RestaurantReviewsViewModel extends ViewModel {
     LiveData<List<Review>> data;
+    String restaurantId = "";
 
     public RestaurantReviewsViewModel() {
         data = Model.instance.getAllReviews();
+    }
+
+    public void changeRestaurantId(String restaurantId) {
+        this.restaurantId = restaurantId;
+        data = Model.instance.getReviewsByRestaurant(restaurantId);
     }
 
     public LiveData<List<Review>> getData() {

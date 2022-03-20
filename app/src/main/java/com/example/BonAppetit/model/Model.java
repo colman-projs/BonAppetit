@@ -31,9 +31,13 @@ public class Model {
         // add all records to the local db
         executor.execute(() -> {
             Long lud = Long.valueOf(0);
-            Log.d("TAG", "fb returned " + list.size());
+            Log.d("TAG", "restaurants returned " + list.size());
             for (Restaurant restaurant : list) {
-                AppLocalDb.db.restaurantDao().insertAll(restaurant);
+                if (restaurant.isDeleted()) {
+                    AppLocalDb.db.restaurantDao().delete(restaurant);
+                } else {
+                    AppLocalDb.db.restaurantDao().insertAll(restaurant);
+                }
                 if (lud < restaurant.getUpdateDate()) {
                     lud = restaurant.getUpdateDate();
                 }
@@ -52,13 +56,46 @@ public class Model {
         });
     }
 
+    private void onCompleteGetAllRestaurantTypes(List<RestaurantType> list) {
+        // add all records to the local db
+        executor.execute(() -> {
+            Long lud = Long.valueOf(0);
+            Log.d("TAG", "types returned " + list.size());
+            for (RestaurantType restaurant : list) {
+                if (restaurant.isDeleted()) {
+                    AppLocalDb.db.restaurantTypeDao().delete(restaurant);
+                } else {
+                    AppLocalDb.db.restaurantTypeDao().insertAll(restaurant);
+                }
+                if (lud < restaurant.getUpdateDate()) {
+                    lud = restaurant.getUpdateDate();
+                }
+            }
+            // update last local update date
+            MyApplication.getContext()
+                    .getSharedPreferences("TAG", Context.MODE_PRIVATE)
+                    .edit()
+                    .putLong("RestaurantsLastUpdateDate", lud)
+                    .commit();
+
+            //return all data to caller
+            List<RestaurantType> stList = AppLocalDb.db.restaurantTypeDao().getAll();
+            restaurantTypes.postValue(stList);
+            loadingState.postValue(LoadingStates.loaded);
+        });
+    }
+
     private void onCompleteGetAllRestaurantReviews(List<Review> list) {
 // add all records to the local db
         executor.execute(() -> {
             Long lud = Long.valueOf(0);
-            Log.d("TAG", "fb returned " + list.size());
+            Log.d("TAG", "reviews returned " + list.size());
             for (Review review : list) {
-                AppLocalDb.db.reviewDao().insertAll(review);
+                if (review.isDeleted()) {
+                    AppLocalDb.db.reviewDao().delete(review);
+                } else {
+                    AppLocalDb.db.reviewDao().insertAll(review);
+                }
                 if (lud < review.getUpdateDate()) {
                     lud = review.getUpdateDate();
                 }
@@ -77,12 +114,45 @@ public class Model {
         });
     }
 
+    private void onCompleteGetReviewsByRestaurant(List<Review> list) {
+// add all records to the local db
+        executor.execute(() -> {
+            Long lud = Long.valueOf(0);
+            Log.d("TAG", "reviews by restaurant returned " + list.size());
+            for (Review review : list) {
+                if (review.isDeleted()) {
+                    AppLocalDb.db.reviewDao().delete(review);
+                } else {
+                    AppLocalDb.db.reviewDao().insertAll(review);
+                }
+                if (lud < review.getUpdateDate()) {
+                    lud = review.getUpdateDate();
+                }
+            }
+// update last local update date
+            MyApplication.getContext()
+                    .getSharedPreferences("TAG", Context.MODE_PRIVATE)
+                    .edit()
+                    .putLong("ReviewsLastUpdateDate", lud)
+                    .commit();
+
+//return all data to caller
+            List<Review> stList = AppLocalDb.db.reviewDao().getByRestaurant(lastRestaurantId);
+            restaurantReviews.postValue(stList);
+            loadingState.postValue(LoadingStates.loaded);
+        });
+    }
+
     public interface GetUserLoginListener {
         void onComplete(User user);
     }
 
     public void getUserLogin(String mail, String password, GetUserLoginListener listener) {
         modelFirebase.getUserLogin(mail, password, listener);
+    }
+
+    public void getUserById(String id, GetUserLoginListener listener) {
+        modelFirebase.getUserById(id, listener);
     }
 
     public interface GetUserExistsListener {
@@ -110,6 +180,8 @@ public class Model {
 
     MutableLiveData<List<Restaurant>> restaurantList = new MutableLiveData<>();
     MutableLiveData<List<Review>> restaurantReviews = new MutableLiveData<>();
+    MutableLiveData<List<RestaurantType>> restaurantTypes = new MutableLiveData<>();
+    String lastRestaurantId = "";
 
     public LiveData<List<Restaurant>> getAll() {
         if (restaurantList.getValue() == null) {
@@ -119,9 +191,26 @@ public class Model {
         return restaurantList;
     }
 
+    public LiveData<List<RestaurantType>> getAllTypes() {
+        if (restaurantTypes.getValue() == null) {
+            refreshRestaurantTypes();
+        }
+
+        return restaurantTypes;
+    }
+
     public LiveData<List<Review>> getAllReviews() {
         if (restaurantReviews.getValue() == null) {
             refreshRestaurantReviews();
+        }
+
+        return restaurantReviews;
+    }
+
+    public LiveData<List<Review>> getReviewsByRestaurant(String restaurantId) {
+        if (restaurantReviews.getValue() == null || lastRestaurantId != restaurantId) {
+            lastRestaurantId = restaurantId;
+            refreshRestaurantReviews(restaurantId);
         }
 
         return restaurantReviews;
@@ -142,6 +231,21 @@ public class Model {
         modelFirebase.getAllRestaurants(lastUpdateDate, this::onCompleteGetAllRestaurants);
     }
 
+    public void refreshRestaurantTypes() {
+        loadingState.setValue(LoadingStates.loading);
+
+        // get last local update date
+        Long lastUpdateDate = MyApplication.getContext().getSharedPreferences("TAG", Context.MODE_PRIVATE).getLong("RestaurantTypesLastUpdateDate", 0);
+
+        executor.execute(() -> {
+            List<RestaurantType> stList = AppLocalDb.db.restaurantTypeDao().getAll();
+            restaurantTypes.postValue(stList);
+        });
+
+        // firebase get all updates since lastLocalUpdateDate
+        modelFirebase.getAllRestaurantTypes(lastUpdateDate, this::onCompleteGetAllRestaurantTypes);
+    }
+
     public void refreshRestaurantReviews() {
         loadingState.setValue(LoadingStates.loading);
 
@@ -156,6 +260,22 @@ public class Model {
         // firebase get all updates since lastLocalUpdateDate
         modelFirebase.getAllRestaurantReviews(reviewsLastUpdateDate,
                 this::onCompleteGetAllRestaurantReviews);
+    }
+
+    public void refreshRestaurantReviews(String restaurantId) {
+        loadingState.setValue(LoadingStates.loading);
+
+        // get last local update date
+        Long reviewsLastUpdateDate = MyApplication.getContext().getSharedPreferences("TAG", Context.MODE_PRIVATE).getLong("ReviewsLastUpdateDate", 0);
+
+        executor.execute(() -> {
+            List<Review> stList = AppLocalDb.db.reviewDao().getByRestaurant(restaurantId);
+            restaurantReviews.postValue(stList);
+        });
+
+        // firebase get all updates since lastLocalUpdateDate
+        modelFirebase.getAllRestaurantReviews(reviewsLastUpdateDate,
+                this::onCompleteGetReviewsByRestaurant);
     }
 
     public void addRestaurant(Restaurant restaurant, AddListener listener) {
@@ -192,6 +312,15 @@ public class Model {
 
     public interface getReviewById {
         void onComplete(Review review);
+    }
+
+    public interface GetRestaurantById {
+        void onComplete(Restaurant restaurant);
+    }
+
+    public Student getRestaurantById(String restaurantId, GetRestaurantById listener) {
+        modelFirebase.getRestaurantById(restaurantId, listener);
+        return null;
     }
 //--------------------------------------------------------------------------------------------------
 
