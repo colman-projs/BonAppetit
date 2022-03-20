@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -33,7 +35,10 @@ public class LoginFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
+
         View view = inflater.inflate(R.layout.fragment_login, container, false);
+
 
         email = view.findViewById(R.id.login_email_et);
         password = view.findViewById(R.id.login_password_et);
@@ -55,12 +60,17 @@ public class LoginFragment extends Fragment {
             return;
         }
 
+        ((BaseActivity) getActivity()).setLoading(true);
+
         mAuth.signInWithEmailAndPassword(email.getText().toString(), password.getText().toString())
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         Navigation.findNavController(getView())
                                 .navigate(R.id.action_loginFragment_to_restaurantListRvFragment);
+                        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+                        ((BaseActivity) getActivity()).setLoading(false);
                     } else {
+                        ((BaseActivity) getActivity()).setLoading(false);
                         Toast.makeText(getContext(),
                                 "Login failed, please check your credentials", Toast.LENGTH_LONG).show();
                     }

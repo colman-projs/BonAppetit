@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.BonAppetit.R;
+import com.example.BonAppetit.feed.BaseActivity;
 import com.example.BonAppetit.model.Model;
 import com.example.BonAppetit.model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -59,12 +60,15 @@ public class RegisterFragment extends Fragment {
             return;
         }
 
+        ((BaseActivity) getActivity()).setLoading(true);
+
         User user = new User();
 
         String mail = email.getText().toString();
         String pass = password.getText().toString();
 
         mAuth.createUserWithEmailAndPassword(mail, pass).addOnCompleteListener(task -> {
+
             if (task.isSuccessful()) {
                 FirebaseUser userAuth = mAuth.getCurrentUser();
                 user.setId(userAuth.getUid());
@@ -74,12 +78,16 @@ public class RegisterFragment extends Fragment {
                 user.setPassword(password.getText().toString());
 
                 Model.instance.registerUser(user, () -> {
+                    ((BaseActivity) getActivity()).setLoading(false);
+
                     Toast.makeText(getActivity(), "Registration successful", Toast.LENGTH_LONG).show();
 
                     Navigation.findNavController(getView())
                             .navigate(R.id.action_registerFragment_to_restaurantListRvFragment);
                 });
             } else {
+                ((BaseActivity) getActivity()).setLoading(false);
+
                 Toast.makeText(getContext(), "Failed to register, please try again later", Toast.LENGTH_SHORT).show();
             }
         });

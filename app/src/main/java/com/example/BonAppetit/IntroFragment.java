@@ -41,6 +41,6 @@ public class IntroFragment extends Fragment {
                         R.id.action_introFragment_to_restaurantListRvFragment :
                         R.id.action_introFragment_to_loginFragment);
 
-        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+        if (signedIn) ((AppCompatActivity) getActivity()).getSupportActionBar().show();
     }
 }
