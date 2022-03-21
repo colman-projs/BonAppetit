@@ -62,14 +62,14 @@ public class Model {
         executor.execute(() -> {
             Long lud = Long.valueOf(0);
             Log.d("TAG", "types returned " + list.size());
-            for (RestaurantType restaurant : list) {
-                if (restaurant.isDeleted()) {
-                    AppLocalDb.db.restaurantTypeDao().delete(restaurant);
+            for (RestaurantType restaurantType : list) {
+                if (restaurantType.isDeleted()) {
+                    AppLocalDb.db.restaurantTypeDao().delete(restaurantType);
                 } else {
-                    AppLocalDb.db.restaurantTypeDao().insertAll(restaurant);
+                    AppLocalDb.db.restaurantTypeDao().insertAll(restaurantType);
                 }
-                if (lud < restaurant.getUpdateDate()) {
-                    lud = restaurant.getUpdateDate();
+                if (lud < restaurantType.getUpdateDate()) {
+                    lud = restaurantType.getUpdateDate();
                 }
             }
             // update last local update date

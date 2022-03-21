@@ -31,6 +31,8 @@ public class RestaurantListRvFragment extends Fragment {
     MyAdapter adapter;
     SwipeRefreshLayout swipeRefresh;
 
+    String restaurantTypes;
+
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -41,6 +43,8 @@ public class RestaurantListRvFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_restaurants_list,container,false);
+
+        restaurantTypes = RestaurantListRvFragmentArgs.fromBundle(getArguments()).getTypeFilters();
 
         swipeRefresh = view.findViewById(R.id.restaurantlist_swiperefresh);
         swipeRefresh.setOnRefreshListener(() -> Model.instance.refreshRestaurantList());
