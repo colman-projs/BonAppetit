@@ -310,18 +310,22 @@ public class Model {
         void onComplete();
     }
 
-    public interface getReviewById {
+    public interface GetReview {
         void onComplete(Review review);
+    }
+
+    public void getReviewByUserRestaurant(String userId, String restaurantId, GetReview listener ) {
+        modelFirebase.getReviewByUserRestaurant(userId, restaurantId, listener);
     }
 
     public interface GetRestaurantById {
         void onComplete(Restaurant restaurant);
     }
 
-    public Student getRestaurantById(String restaurantId, GetRestaurantById listener) {
+    public void getRestaurantById(String restaurantId, GetRestaurantById listener) {
         modelFirebase.getRestaurantById(restaurantId, listener);
-        return null;
     }
+
 //--------------------------------------------------------------------------------------------------
 
     public interface SaveImageListener {

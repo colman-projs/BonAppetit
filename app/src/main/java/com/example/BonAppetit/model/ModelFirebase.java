@@ -42,7 +42,7 @@ public class ModelFirebase {
                             list.add(user);
                         }
                     }
-                    listener.onComplete(list.get(0));
+                    listener.onComplete(list.isEmpty() ? null : list.get(0));
                 });
     }
 
@@ -207,16 +207,21 @@ public class ModelFirebase {
                 .addOnFailureListener(e -> listener.onComplete());
     }
 
-    public void getReviewById(String reviewId, Model.getReviewById listener) {
+    public void getReviewByUserRestaurant(String userId, String restaurantId, Model.GetReview listener) {
         db.collection(Review.COLLECTION_NAME)
-                .document(reviewId)
+                .whereEqualTo("userId", userId)
+                .whereEqualTo("restaurantId", restaurantId)
                 .get()
                 .addOnCompleteListener(task -> {
-                    Review review = null;
-                    if (task.isSuccessful() & task.getResult() != null) {
-                        review = Review.create(Objects.requireNonNull(task.getResult().getData()));
+                    List<Review> reviews = new LinkedList<>();
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot doc : task.getResult()) {
+                            Review review = Review.create(Objects.requireNonNull(doc.getData()));
+                            reviews.add(review);
+                        }
                     }
-                    listener.onComplete(review);
+
+                    listener.onComplete(reviews.isEmpty() ? null : reviews.get(0));
                 });
     }
 

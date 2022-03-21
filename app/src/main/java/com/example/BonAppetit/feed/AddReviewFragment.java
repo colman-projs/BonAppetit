@@ -26,9 +26,13 @@ import com.example.BonAppetit.R;
 import com.example.BonAppetit.model.Model;
 import com.example.BonAppetit.model.Review;
 import com.google.firebase.auth.FirebaseAuth;
+import com.squareup.picasso.Picasso;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class AddReviewFragment extends Fragment {
     private static final int REQUEST_CAMERA = 1;
@@ -46,6 +50,8 @@ public class AddReviewFragment extends Fragment {
 
     String restaurantId;
 
+    String reviewId = "";
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -60,7 +66,23 @@ public class AddReviewFragment extends Fragment {
         saveBtn = view.findViewById(R.id.main_save_btn);
         cancelBtn = view.findViewById(R.id.main_cancel_btn);
         progressBar = view.findViewById(R.id.main_progressbar);
-        progressBar.setVisibility(View.GONE);
+
+        progressBar.setVisibility(View.VISIBLE);
+        Model.instance.getReviewByUserRestaurant(FirebaseAuth.getInstance().getCurrentUser().getUid(), restaurantId, review -> {
+            if (review != null) {
+                reviewId = review.getId();
+                descEt.setText(review.getDescription());
+                rateRb.setRating(review.getRating());
+
+                if (review.getImageUrl() != null) {
+                    Picasso.get()
+                            .load(review.getImageUrl())
+                            .into(imageImv);
+                }
+            }
+
+            progressBar.setVisibility(View.GONE);
+        });
 
         saveBtn.setOnClickListener(v -> save());
 

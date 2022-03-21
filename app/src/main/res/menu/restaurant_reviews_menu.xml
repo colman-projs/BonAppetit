@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/addReviewFragment1"
-        android:icon="@android:drawable/ic_menu_add"
+        android:icon="@android:drawable/btn_star_big_on"
         android:title="Add"
         app:showAsAction="always" />
 </menu>

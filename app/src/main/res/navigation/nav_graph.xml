@@ -43,13 +43,14 @@
         android:id="@+id/MapFragment"
         android:name="com.example.BonAppetit.feed.MapsFragment"
         android:label="Restaurants Map"
-        tools:layout="@layout/fragment_maps" />
+        tools:layout="@layout/fragment_maps" >
+        <action
+            android:id="@+id/action_MapsFragment_to_restaurantReviewsFragment"
+            app:destination="@id/RestaurantReviewsFragment" />
+    </fragment>
     <action
         android:id="@+id/action_global_MapsFragment"
         app:destination="@id/MapFragment" />
-    <action
-        android:id="@+id/action_MapsFragment_to_restaurantReviewsFragment"
-        app:destination="@id/RestaurantReviewsFragment" />
 
 <!--    Restaurnt Types -->
     <fragment
