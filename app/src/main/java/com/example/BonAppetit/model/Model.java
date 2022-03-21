@@ -12,6 +12,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.BonAppetit.MyApplication;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -216,6 +217,12 @@ public class Model {
         return restaurantReviews;
     }
 
+    public LiveData<List<Restaurant>> getRestaurantsByTypes(ArrayList<String> types) {
+        refreshRestaurantList(types);
+
+        return restaurantList;
+    }
+
     public void refreshRestaurantList() {
         loadingState.setValue(LoadingStates.loading);
 
@@ -276,6 +283,28 @@ public class Model {
         // firebase get all updates since lastLocalUpdateDate
         modelFirebase.getAllRestaurantReviews(reviewsLastUpdateDate,
                 this::onCompleteGetReviewsByRestaurant);
+    }
+
+    public void refreshRestaurantList(ArrayList<String> types) {
+        loadingState.setValue(LoadingStates.loading);
+
+        // get last local update date
+        Long lastUpdateDate = MyApplication.getContext().getSharedPreferences("TAG", Context.MODE_PRIVATE).getLong("RestaurantsLastUpdateDate", 0);
+
+        executor.execute(() -> {
+            List<Restaurant> stList = AppLocalDb.db.restaurantDao().getAll();
+
+            List<Restaurant> filteredRestaurants = new ArrayList<>();
+
+            for(Restaurant rst : stList) {
+                if(types.contains(rst.getRestaurantTypeId())) filteredRestaurants.add(rst);
+            }
+
+            restaurantList.postValue(filteredRestaurants);
+        });
+
+        // firebase get all updates since lastLocalUpdateDate
+        modelFirebase.getAllRestaurants(lastUpdateDate, this::onCompleteGetAllRestaurants);
     }
 
     public void addRestaurant(Restaurant restaurant, AddListener listener) {
