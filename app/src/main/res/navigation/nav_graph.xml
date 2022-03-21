@@ -32,7 +32,7 @@
         android:id="@+id/addReviewFragment"
         android:name="com.example.BonAppetit.feed.AddReviewFragment"
         android:label="Add New Review"
-        tools:layout="@layout/fragment_add_review" >
+        tools:layout="@layout/fragment_add_review">
         <argument
             android:name="restaurantId"
             app:argType="string" />
@@ -43,7 +43,7 @@
         android:id="@+id/MapFragment"
         android:name="com.example.BonAppetit.feed.MapsFragment"
         android:label="Restaurants Map"
-        tools:layout="@layout/fragment_maps" >
+        tools:layout="@layout/fragment_maps">
         <action
             android:id="@+id/action_MapsFragment_to_restaurantReviewsFragment"
             app:destination="@id/RestaurantReviewsFragment" />
@@ -52,7 +52,7 @@
         android:id="@+id/action_global_MapsFragment"
         app:destination="@id/MapFragment" />
 
-<!--    Restaurnt Types -->
+    <!--    Restaurnt Types -->
     <fragment
         android:id="@+id/RestaurantTypesFragment"
         android:name="com.example.BonAppetit.feed.RestaurantTypesFragment"
@@ -62,7 +62,7 @@
         android:id="@+id/action_global_RestaurantTypesFragment"
         app:destination="@id/RestaurantTypesFragment" />
 
-<!--    Add restaurant-->
+    <!--    Add restaurant-->
     <fragment
         android:id="@+id/addRestaurantFragment"
         android:name="com.example.BonAppetit.feed.AddRestaurantFragment"
@@ -108,6 +108,10 @@
         android:name="com.example.BonAppetit.login.RegisterFragment"
         android:label="Registration"
         tools:layout="@layout/fragment_register">
+        <argument
+            android:name="edit"
+            android:defaultValue="false"
+            app:argType="boolean" />
         <action
             android:id="@+id/action_registerFragment_to_restaurantListRvFragment"
             app:destination="@id/restaurantListRvFragment"
@@ -136,12 +140,12 @@
         app:launchSingleTop="true"
         app:popUpTo="@id/nav_graph"
         app:popUpToInclusive="true" />
-    <fragment
-        android:id="@+id/editProfileFragment"
-        android:name="com.example.BonAppetit.EditProfileFragment"
-        android:label="fragment_edit_profile"
-        tools:layout="@layout/fragment_edit_profile" />
     <action
-        android:id="@+id/action_global_editProfileFragment"
-        app:destination="@id/editProfileFragment" />
+        android:id="@+id/action_global_editProfile"
+        app:destination="@id/registerFragment">
+        <argument
+            android:name="edit"
+            android:defaultValue="true"
+            app:argType="boolean" />
+    </action>
 </navigation>

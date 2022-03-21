@@ -335,6 +335,12 @@ public class Model {
         });
     }
 
+    public void updateUser(User user, AddListener listener) {
+        modelFirebase.updateUser(user, () -> {
+            listener.onComplete();
+        });
+    }
+
     public interface AddListener {
         void onComplete();
     }

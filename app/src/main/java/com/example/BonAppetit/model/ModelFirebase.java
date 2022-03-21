@@ -198,6 +198,15 @@ public class ModelFirebase {
                 .addOnFailureListener(e -> listener.onComplete());
     }
 
+    public void updateUser(User user, Model.AddListener listener) {
+        Map<String, Object> json = user.toJson();
+        db.collection(User.COLLECTION_NAME)
+                .document(user.getId())
+                .set(json)
+                .addOnSuccessListener(unused -> listener.onComplete())
+                .addOnFailureListener(e -> listener.onComplete());
+    }
+
     public void updateReview(Review review, Model.AddListener listener) {
         Map<String, Object> json = review.toJson();
         db.collection(Review.COLLECTION_NAME)

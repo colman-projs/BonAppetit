@@ -8,7 +8,7 @@
         android:title="@string/about"
         app:showAsAction="never" />
     <item
-        android:id="@+id/editProfileFragment"
+        android:id="@+id/action_global_editProfile"
         android:icon="@android:drawable/ic_menu_manage"
         android:title="@string/edit_profile"
         app:showAsAction="never" />
