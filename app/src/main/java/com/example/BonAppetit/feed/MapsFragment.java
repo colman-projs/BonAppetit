@@ -39,6 +39,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     private FusedLocationProviderClient fusedLocationClient;
     private RestaurantListRvViewModel viewModel;
     private LiveData<List<Restaurant>> liveData;
+    private static final int DEFAULT_ZOOM = 15;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -96,11 +97,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                 ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             fusedLocationClient.getLastLocation()
                     .addOnSuccessListener(getActivity(), location -> {
-                        // Got last known location. In some rare situations, this can be null.
                         if (location != null) {
                             map.setMyLocationEnabled(true);
                             map.getUiSettings().setMyLocationButtonEnabled(true);
-                            moveMap(location.getLatitude(), location.getLongitude());
+                            MoveToCurrentLocation(location.getLatitude(), location.getLongitude());
                         }
 
                     });
@@ -112,14 +112,14 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         }
     }
 
-    private void moveMap(double latitude, double longitude) {
+    private void MoveToCurrentLocation(double latitude, double longitude) {
         /*
          * Move map to current device location
          */
         if (map != null) {
             LatLng latLng = new LatLng(latitude, longitude);
             map.animateCamera(CameraUpdateFactory.newLatLng(latLng));
-            map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12));
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM));
             map.getUiSettings().setZoomControlsEnabled(true);
         }
     }

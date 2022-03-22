@@ -22,6 +22,7 @@ public class User {
     String firstName = "";
     String lastName = "";
     String avatarUrl;
+    boolean isAdmin = false;
     boolean deleted = false;
     Long updateDate = new Long(0);
 
@@ -101,6 +102,12 @@ public class User {
         this.updateDate = updateDate;
     }
 
+    public void setAdmin(boolean admin){
+        this.isAdmin = admin;
+    }
+
+    public boolean isAdmin(){ return isAdmin;}
+
     public Map<String, Object> toJson() {
         Map<String, Object> json = new HashMap<>();
         json.put("id", id);
@@ -110,6 +117,7 @@ public class User {
         json.put("lastName", lastName);
         json.put("avatarUrl", avatarUrl);
         json.put("deleted", deleted);
+        json.put("isAdmin", isAdmin);
         json.put("updateDate", FieldValue.serverTimestamp());
         return json;
     }
@@ -124,12 +132,14 @@ public class User {
         boolean deleted = (boolean)json.get("deleted");
         Timestamp ts = (Timestamp)json.get("updateDate");
         Long updateDate = ts.getSeconds();
+        boolean isAdmin = (boolean) json.get("isAdmin");
 
         User user = new User(mail, password, firstName, lastName);
         user.setId(id);
         user.setAvatarUrl(avatarUrl);
         user.setDeleted(deleted);
         user.setUpdateDate(updateDate);
+        user.setAdmin(isAdmin);
         return user;
     }
 }

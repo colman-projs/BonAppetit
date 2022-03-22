@@ -46,7 +46,7 @@ public class ModelFirebase {
                 });
     }
 
-    public void getUserById(String id, Model.GetUserLoginListener listener) {
+    public void getUserById(String id, Model.GetUserByIdListener listener) {
         db.collection(User.COLLECTION_NAME)
                 .whereEqualTo("id", id)
                 .get()
