@@ -11,28 +11,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RestaurantListRvViewModel extends ViewModel {
-    private final ArrayList<RestaurantType> filters = new ArrayList<>();
-
+    ArrayList<RestaurantType> filters = new ArrayList<>();
     LiveData<List<Restaurant>> data;
 
     public RestaurantListRvViewModel() {
-        data = Model.instance.getAll();
+//        data = Model.instance.getAll();
     }
 
     public LiveData<List<Restaurant>> getData() {
-        ArrayList<Restaurant> filteredRestaurants = new ArrayList<>();
+        if (filters.size() > 0) {
+            ArrayList<String> types = new ArrayList<>();
 
-        if (data.getValue() != null) {
-            for (Restaurant restaurant : data.getValue()) {
-                for (RestaurantType type : filters) {
-                    if (type.isChecked() && restaurant.getRestaurantTypeId() == type.getId()) {
-                        filteredRestaurants.add(restaurant);
-                    }
-                }
+            for (RestaurantType filter : filters) {
+                if(filter.isChecked()) types.add(filter.getId());
             }
-        }
 
-//        data = restaurants;
+            data = Model.instance.getRestaurantsByTypes(types);
+        } else {
+            data = Model.instance.getAll();
+        }
 
         return data;
     }
@@ -42,17 +39,8 @@ public class RestaurantListRvViewModel extends ViewModel {
     }
 
     public void updateFilter(RestaurantType filter) {
-        boolean isExists = false;
-        for (RestaurantType type : filters) {
-            if (type.getId() == filter.getId()) {
-                isExists = true;
-            }
-        }
+//        filters.removeIf(restaurantType -> filter.getId().equals(restaurantType.getId()));
 
-        if (isExists) {
-            // Add filter to filters
-        } else {
-            filters.add(filter);
-        }
+        filters.add(filter);
     }
 }

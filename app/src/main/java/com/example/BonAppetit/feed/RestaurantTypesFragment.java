@@ -24,24 +24,34 @@ import com.example.BonAppetit.model.Model;
 import com.example.BonAppetit.model.RestaurantType;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+import java.util.stream.Collectors;
+
 public class RestaurantTypesFragment extends Fragment {
     RestaurantTypesViewModel viewModel;
     MyAdapter adapter;
     SwipeRefreshLayout swipeRefresh;
     Button confirmButton;
 
+    ArrayList<RestaurantType> filters;
+
     private RestaurantListRvViewModel restaurantListRvViewModel;
 
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         restaurantListRvViewModel = new ViewModelProvider(requireActivity()).get(RestaurantListRvViewModel.class);
+        filters = new ArrayList<RestaurantType>();
 //        restaurantListRvViewModel.getFilters().observe(getViewLifecycleOwner(), set -> {
             // Update the selected filters UI
 //        });
     }
 
     public void updateFilter(RestaurantType filter) {
-        restaurantListRvViewModel.updateFilter(filter);
+        if (filter.isChecked()) {
+            filters.add(filter);
+        } else {
+            filters.remove(filter);
+        }
     }
 
     @Override
@@ -91,11 +101,41 @@ public class RestaurantTypesFragment extends Fragment {
         adapter.notifyDataSetChanged();
     }
 
+    private static String join(String separator, String[] input) {
+
+        if (input == null || input.length <= 0) return "";
+
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < input.length; i++) {
+
+            sb.append(input[i]);
+
+            // if not the last item
+            if (i != input.length - 1) {
+                sb.append(separator);
+            }
+
+        }
+
+        return sb.toString();
+
+    }
+
     private void confirm(View v) {
-        Navigation.findNavController(v).navigateUp();
+        ArrayList<String> restaurantTypes = new ArrayList<>();
+
+        for (RestaurantType type : filters) {
+            restaurantTypes.add(type.getId());
+        }
+
+        String[] types = restaurantTypes.toArray(new String[restaurantTypes.size()]);
+
+        Navigation.findNavController(v).navigate(RestaurantTypesFragmentDirections.actionRestaurantTypesFragmentToRestaurantListRvFragment(join(",", types)));
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {
+        RestaurantType _restaurantType;
         ImageView image;
         TextView name;
         CheckBox checkbox;
@@ -109,13 +149,19 @@ public class RestaurantTypesFragment extends Fragment {
 
             itemView.setOnClickListener(v -> {
                 checkbox.setChecked(!checkbox.isChecked());
-                listener.onItemClick(v, new RestaurantType(
-                        id,
-                        checkbox.isChecked()));
+                _restaurantType.setChecked(checkbox.isChecked());
+                listener.onItemClick(v, _restaurantType);
+            });
+
+            checkbox.setOnClickListener(v -> {
+//                checkbox.setChecked(!checkbox.isChecked());
+                _restaurantType.setChecked(checkbox.isChecked());
+                listener.onItemClick(v, _restaurantType);
             });
         }
 
         void bind(RestaurantType restaurantType) {
+            _restaurantType = restaurantType;
             id = restaurantType.getId();
             checkbox.setChecked(restaurantType.isChecked());
             name.setText(restaurantType.getName());

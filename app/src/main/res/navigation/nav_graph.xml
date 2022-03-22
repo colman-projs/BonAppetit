@@ -14,6 +14,12 @@
         <action
             android:id="@+id/action_restaurantListRvFragment_to_restaurantReviewsFragment"
             app:destination="@id/RestaurantReviewsFragment" />
+        <action
+            android:id="@+id/action_restaurantListRvFragment_to_RestaurantTypesFragment"
+            app:destination="@id/RestaurantTypesFragment" />
+        <argument
+            android:name="typeFilters"
+            app:argType="string" />
 
 
         <!--    About -->
@@ -32,7 +38,7 @@
         android:id="@+id/addReviewFragment"
         android:name="com.example.BonAppetit.feed.AddReviewFragment"
         android:label="Add New Review"
-        tools:layout="@layout/fragment_add_review" >
+        tools:layout="@layout/fragment_add_review">
         <argument
             android:name="restaurantId"
             app:argType="string" />
@@ -43,25 +49,32 @@
         android:id="@+id/MapFragment"
         android:name="com.example.BonAppetit.feed.MapsFragment"
         android:label="Restaurants Map"
-        tools:layout="@layout/fragment_maps" />
+        tools:layout="@layout/fragment_maps">
+        <action
+            android:id="@+id/action_MapsFragment_to_restaurantReviewsFragment"
+            app:destination="@id/RestaurantReviewsFragment" />
+    </fragment>
     <action
         android:id="@+id/action_global_MapsFragment"
         app:destination="@id/MapFragment" />
-    <action
-        android:id="@+id/action_MapsFragment_to_restaurantReviewsFragment"
-        app:destination="@id/RestaurantReviewsFragment" />
 
-<!--    Restaurnt Types -->
+    <!--    Restaurnt Types -->
     <fragment
         android:id="@+id/RestaurantTypesFragment"
         android:name="com.example.BonAppetit.feed.RestaurantTypesFragment"
         android:label="Types Filter"
-        tools:layout="@layout/fragment_restaurants_types" />
-    <action
-        android:id="@+id/action_global_RestaurantTypesFragment"
-        app:destination="@id/RestaurantTypesFragment" />
+        tools:layout="@layout/fragment_restaurants_types" >
+        <action
+            android:id="@+id/action_RestaurantTypesFragment_to_restaurantListRvFragment"
+            app:destination="@id/restaurantListRvFragment"
+            app:popUpTo="@id/restaurantListRvFragment"
+            app:popUpToInclusive="true" >
+            <argument
+                android:name="typeFilters" />
+        </action>
+    </fragment>
 
-<!--    Add restaurant-->
+    <!--    Add restaurant-->
     <fragment
         android:id="@+id/addRestaurantFragment"
         android:name="com.example.BonAppetit.feed.AddRestaurantFragment"
@@ -98,7 +111,11 @@
             android:id="@+id/action_loginFragment_to_restaurantListRvFragment"
             app:destination="@id/restaurantListRvFragment"
             app:popUpTo="@id/loginFragment"
-            app:popUpToInclusive="true" />
+            app:popUpToInclusive="true" >
+            <argument
+                android:name="typeFilters"
+                android:defaultValue="" />
+        </action>
     </fragment>
 
     <!--    Register-->
@@ -107,11 +124,19 @@
         android:name="com.example.BonAppetit.login.RegisterFragment"
         android:label="Registration"
         tools:layout="@layout/fragment_register">
+        <argument
+            android:name="edit"
+            android:defaultValue="false"
+            app:argType="boolean" />
         <action
             android:id="@+id/action_registerFragment_to_restaurantListRvFragment"
             app:destination="@id/restaurantListRvFragment"
             app:popUpTo="@id/registerFragment"
-            app:popUpToInclusive="true" />
+            app:popUpToInclusive="true" >
+            <argument
+                android:name="typeFilters"
+                android:defaultValue="" />
+        </action>
     </fragment>
     <fragment
         android:id="@+id/introFragment"
@@ -127,7 +152,11 @@
             android:id="@+id/action_introFragment_to_restaurantListRvFragment"
             app:destination="@id/restaurantListRvFragment"
             app:popUpTo="@id/introFragment"
-            app:popUpToInclusive="true" />
+            app:popUpToInclusive="true" >
+            <argument
+                android:name="typeFilters"
+                android:defaultValue="" />
+        </action>
     </fragment>
     <action
         android:id="@+id/action_global_loginFragment"
@@ -135,12 +164,12 @@
         app:launchSingleTop="true"
         app:popUpTo="@id/nav_graph"
         app:popUpToInclusive="true" />
-    <fragment
-        android:id="@+id/editProfileFragment"
-        android:name="com.example.BonAppetit.EditProfileFragment"
-        android:label="fragment_edit_profile"
-        tools:layout="@layout/fragment_edit_profile" />
     <action
-        android:id="@+id/action_global_editProfileFragment"
-        app:destination="@id/editProfileFragment" />
+        android:id="@+id/action_global_editProfile"
+        app:destination="@id/registerFragment">
+        <argument
+            android:name="edit"
+            android:defaultValue="true"
+            app:argType="boolean" />
+    </action>
 </navigation>

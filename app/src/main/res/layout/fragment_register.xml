@@ -71,15 +71,6 @@
             android:inputType="textEmailAddress" />
 
         <EditText
-            android:id="@+id/editTextPhone"
-            android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            android:layout_marginBottom="4dp"
-            android:ems="10"
-            android:hint="@string/phone"
-            android:inputType="phone" />
-
-        <EditText
             android:id="@+id/editTextPassword"
             android:layout_width="wrap_content"
             android:layout_height="48dp"

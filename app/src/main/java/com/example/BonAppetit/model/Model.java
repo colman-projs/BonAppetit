@@ -12,6 +12,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.BonAppetit.MyApplication;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -61,14 +62,14 @@ public class Model {
         executor.execute(() -> {
             Long lud = Long.valueOf(0);
             Log.d("TAG", "types returned " + list.size());
-            for (RestaurantType restaurant : list) {
-                if (restaurant.isDeleted()) {
-                    AppLocalDb.db.restaurantTypeDao().delete(restaurant);
+            for (RestaurantType restaurantType : list) {
+                if (restaurantType.isDeleted()) {
+                    AppLocalDb.db.restaurantTypeDao().delete(restaurantType);
                 } else {
-                    AppLocalDb.db.restaurantTypeDao().insertAll(restaurant);
+                    AppLocalDb.db.restaurantTypeDao().insertAll(restaurantType);
                 }
-                if (lud < restaurant.getUpdateDate()) {
-                    lud = restaurant.getUpdateDate();
+                if (lud < restaurantType.getUpdateDate()) {
+                    lud = restaurantType.getUpdateDate();
                 }
             }
             // update last local update date
@@ -220,6 +221,12 @@ public class Model {
         return restaurantReviews;
     }
 
+    public LiveData<List<Restaurant>> getRestaurantsByTypes(ArrayList<String> types) {
+        refreshRestaurantList(types);
+
+        return restaurantList;
+    }
+
     public void refreshRestaurantList() {
         loadingState.setValue(LoadingStates.loading);
 
@@ -282,6 +289,28 @@ public class Model {
                 this::onCompleteGetReviewsByRestaurant);
     }
 
+    public void refreshRestaurantList(ArrayList<String> types) {
+        loadingState.setValue(LoadingStates.loading);
+
+        // get last local update date
+        Long lastUpdateDate = MyApplication.getContext().getSharedPreferences("TAG", Context.MODE_PRIVATE).getLong("RestaurantsLastUpdateDate", 0);
+
+        executor.execute(() -> {
+            List<Restaurant> stList = AppLocalDb.db.restaurantDao().getAll();
+
+            List<Restaurant> filteredRestaurants = new ArrayList<>();
+
+            for(Restaurant rst : stList) {
+                if(types.contains(rst.getRestaurantTypeId())) filteredRestaurants.add(rst);
+            }
+
+            restaurantList.postValue(filteredRestaurants);
+        });
+
+        // firebase get all updates since lastLocalUpdateDate
+        modelFirebase.getAllRestaurants(lastUpdateDate, this::onCompleteGetAllRestaurants);
+    }
+
     public void addRestaurant(Restaurant restaurant, AddListener listener) {
         modelFirebase.addRestaurant(restaurant, () -> {
             listener.onComplete();
@@ -310,22 +339,32 @@ public class Model {
         });
     }
 
+    public void updateUser(User user, AddListener listener) {
+        modelFirebase.updateUser(user, () -> {
+            listener.onComplete();
+        });
+    }
+
     public interface AddListener {
         void onComplete();
     }
 
-    public interface getReviewById {
+    public interface GetReview {
         void onComplete(Review review);
+    }
+
+    public void getReviewByUserRestaurant(String userId, String restaurantId, GetReview listener ) {
+        modelFirebase.getReviewByUserRestaurant(userId, restaurantId, listener);
     }
 
     public interface GetRestaurantById {
         void onComplete(Restaurant restaurant);
     }
 
-    public Student getRestaurantById(String restaurantId, GetRestaurantById listener) {
+    public void getRestaurantById(String restaurantId, GetRestaurantById listener) {
         modelFirebase.getRestaurantById(restaurantId, listener);
-        return null;
     }
+
 //--------------------------------------------------------------------------------------------------
 
     public interface SaveImageListener {
