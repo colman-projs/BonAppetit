@@ -321,6 +321,13 @@ public class Model {
         });
     }
 
+    public void deleteReview(Review review, AddListener listener) {
+        modelFirebase.deleteReview(review, () -> {
+            listener.onComplete();
+            refreshRestaurantReviews();
+        });
+    }
+
     public void updateRestaurant(Restaurant restaurant, AddListener listener) {
         modelFirebase.updateRestaurant(restaurant, () -> {
             listener.onComplete();

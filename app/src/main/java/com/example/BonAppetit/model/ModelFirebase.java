@@ -189,6 +189,16 @@ public class ModelFirebase {
                 .addOnFailureListener(e -> listener.onComplete());
     }
 
+    public void deleteReview(Review review, Model.AddListener listener) {
+        review.setDeleted(true);
+        Map<String, Object> json = review.toJson();
+        db.collection(Review.COLLECTION_NAME)
+                .document(review.getId())
+                .set(json)
+                .addOnSuccessListener(unused -> listener.onComplete())
+                .addOnFailureListener(e -> listener.onComplete());
+    }
+
     public void updateRestaurant(Restaurant restaurant, Model.AddListener listener) {
         Map<String, Object> json = restaurant.toJson();
         db.collection(Restaurant.COLLECTION_NAME)
@@ -220,6 +230,7 @@ public class ModelFirebase {
         db.collection(Review.COLLECTION_NAME)
                 .whereEqualTo("userId", userId)
                 .whereEqualTo("restaurantId", restaurantId)
+                .whereEqualTo("deleted", false)
                 .get()
                 .addOnCompleteListener(task -> {
                     List<Review> reviews = new LinkedList<>();

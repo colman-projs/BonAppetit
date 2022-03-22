@@ -26,6 +26,7 @@ public class Restaurant {
     Double latitude = 0.0;
     Double longitude = 0.0;
     boolean deleted = false;
+    int reviewsCount = 0;
     Long updateDate = new Long(0);
 
     public Restaurant() {}
@@ -111,6 +112,14 @@ public class Restaurant {
         this.deleted = deleted;
     }
 
+    public int getReviewsCount() {
+        return reviewsCount;
+    }
+
+    public void setReviewsCount(int reviewsCount) {
+        this.reviewsCount = reviewsCount;
+    }
+
     public Long getUpdateDate() {
         return updateDate;
     }
@@ -129,6 +138,7 @@ public class Restaurant {
         json.put("imageUrl", imageUrl);
         json.put("latitude", latitude);
         json.put("longitude", longitude);
+        json.put("reviewsCount", reviewsCount);
         json.put("deleted", deleted);
         json.put("updateDate", FieldValue.serverTimestamp());
         return json;
@@ -146,6 +156,7 @@ public class Restaurant {
         Double latitude = lat.getClass() == Long.class ? ((Long)lat).doubleValue() : (Double)lat;
         Object lng = json.get("longitude");
         Double longitude = lng.getClass() == Long.class ? ((Long)lng).doubleValue() : (Double)lng;
+        int reviewsCount = json.get("reviewsCount") == null ? 0 : ((Long)json.get("reviewsCount")).intValue();
         boolean deleted = (boolean)json.get("deleted");
         Timestamp ts = (Timestamp)json.get("updateDate");
         Long updateDate = ts.getSeconds();
@@ -153,6 +164,7 @@ public class Restaurant {
         Restaurant restaurant = new Restaurant(name, restaurantTypeId, description, avgRate, latitude, longitude);
         restaurant.setId(id);
         restaurant.setImageUrl(imageUrl);
+        restaurant.setReviewsCount(reviewsCount);
         restaurant.setDeleted(deleted);
         restaurant.setUpdateDate(updateDate);
         return restaurant;

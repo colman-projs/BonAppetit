@@ -71,6 +71,16 @@
             app:layout_constraintEnd_toStartOf="@+id/main_save_btn" />
 
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/review_delete_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="DELETE"
+            app:backgroundTint="@color/design_default_color_error"
+            app:layout_constraintBaseline_toBaselineOf="@+id/main_save_btn"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/main_save_btn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
