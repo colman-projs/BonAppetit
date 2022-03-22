@@ -24,6 +24,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.BonAppetit.R;
 import com.example.BonAppetit.model.Model;
 import com.example.BonAppetit.model.Restaurant;
+import com.example.BonAppetit.model.User;
+import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Picasso;
 
 public class RestaurantListRvFragment extends Fragment {
@@ -146,7 +148,24 @@ public class RestaurantListRvFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.restaurant_list_menu,menu);
+
+        //Check if user isAdmin
+        String UserID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        Model.instance.getUserById(UserID, new Model.GetUserByIdListener() {
+            @Override
+            public void onComplete(User user) {
+
+                if (user.isAdmin() == true){
+                    inflater.inflate(R.menu.restaurant_list_menu_admin,menu);
+                } else {
+                    inflater.inflate(R.menu.restaurants_list_menu,menu);
+                }
+
+
+            }
+        });
+
+
     }
 
     @Override
