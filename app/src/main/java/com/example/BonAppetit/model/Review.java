@@ -119,7 +119,7 @@ public class Review {
         String imageUrl = (String)json.get("imageUrl");
         boolean deleted = (boolean)json.get("deleted");
         Timestamp ts = (Timestamp)json.get("updateDate");
-        Long updateDate = ts.getSeconds();
+        Long updateDate = ts == null ? 0 : ts.getSeconds();
 
         Review review = new Review(restaurantId, userId, description, rating);
         review.setId(id);

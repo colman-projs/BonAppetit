@@ -131,7 +131,7 @@ public class User {
         String avatarUrl = (String)json.get("avatarUrl");
         boolean deleted = (boolean)json.get("deleted");
         Timestamp ts = (Timestamp)json.get("updateDate");
-        Long updateDate = ts.getSeconds();
+        Long updateDate = ts == null ? 0 : ts.getSeconds();
         boolean isAdmin = (boolean) json.get("isAdmin");
 
         User user = new User(mail, password, firstName, lastName);
