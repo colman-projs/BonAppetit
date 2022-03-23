@@ -148,11 +148,15 @@ public class Model {
         void onComplete(User user);
     }
 
+    public interface GetUserByIdListener {
+        void onComplete(User user);
+    }
+
     public void getUserLogin(String mail, String password, GetUserLoginListener listener) {
         modelFirebase.getUserLogin(mail, password, listener);
     }
 
-    public void getUserById(String id, GetUserLoginListener listener) {
+    public void getUserById(String id, GetUserByIdListener listener) {
         modelFirebase.getUserById(id, listener);
     }
 
