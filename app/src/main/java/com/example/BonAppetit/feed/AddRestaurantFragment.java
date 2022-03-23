@@ -58,6 +58,9 @@ public class AddRestaurantFragment extends Fragment {
         imageImv = view.findViewById(R.id.main_image_imv);
 
         saveBtn.setOnClickListener(v -> save());
+        cancelBtn.setOnClickListener(v -> {
+            Navigation.findNavController(nameEt).navigateUp();
+        });
 
         camBtn = view.findViewById(R.id.main_cam_btn);
         galleryBtn = view.findViewById(R.id.main_gallery_btn);

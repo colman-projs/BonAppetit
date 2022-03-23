@@ -98,6 +98,9 @@ public class AddReviewFragment extends Fragment {
 
         saveBtn.setOnClickListener(v -> save());
         deleteBtn.setOnClickListener(v -> delete());
+        cancelBtn.setOnClickListener(v -> {
+            Navigation.findNavController(descEt).navigateUp();
+        });
 
         camBtn = view.findViewById(R.id.main_cam_btn);
         galleryBtn = view.findViewById(R.id.main_gallery_btn);
