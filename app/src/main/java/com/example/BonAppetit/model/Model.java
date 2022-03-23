@@ -376,6 +376,13 @@ public class Model {
         });
     }
 
+    public void deleteRestaurant(Restaurant restaurant, AddListener listener) {
+        modelFirebase.deleteRestaurant(restaurant, () -> {
+            listener.onComplete();
+            refreshRestaurantList();
+        });
+    }
+
     public void updateRestaurant(Restaurant restaurant, AddListener listener) {
         modelFirebase.updateRestaurant(restaurant, () -> {
             listener.onComplete();

@@ -9,6 +9,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -26,6 +27,8 @@ import com.example.BonAppetit.R;
 import com.example.BonAppetit.model.Model;
 import com.example.BonAppetit.model.Restaurant;
 import com.example.BonAppetit.model.Review;
+import com.example.BonAppetit.model.User;
+import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Picasso;
 
 import java.text.DateFormat;
@@ -42,6 +45,9 @@ public class RestaurantReviewsFragment extends Fragment {
     TextView restaurantNameTv;
     RatingBar resRateRb;
     TextView restaurantDescTv;
+    Button deleteBtn;
+
+    Restaurant _restaurant;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -61,6 +67,7 @@ public class RestaurantReviewsFragment extends Fragment {
         restaurantNameTv = view.findViewById(R.id.restaurant_detail_name_tv);
         resRateRb = view.findViewById(R.id.restaurant_detail_rate_bar);
         restaurantDescTv = view.findViewById(R.id.restaurant_detail_desc_tv);
+        deleteBtn = view.findViewById(R.id.restaurant_delete_btn);
 
         swipeRefresh = view.findViewById(R.id.restaurantreviews_swiperefresh);
         swipeRefresh.setOnRefreshListener(() -> Model.instance.refreshRestaurantReviews(restaurantId));
@@ -68,6 +75,7 @@ public class RestaurantReviewsFragment extends Fragment {
         Model.instance.getRestaurantById(restaurantId, new Model.GetRestaurantById() {
             @Override
             public void onComplete(Restaurant restaurant) {
+                _restaurant = restaurant;
                 restaurantNameTv.setText(restaurant.getName());
                 resRateRb.setRating(restaurant.getAvgRate().floatValue());
                 restaurantDescTv.setText(restaurant.getDescription());
@@ -76,6 +84,22 @@ public class RestaurantReviewsFragment extends Fragment {
                 }
             }
         });
+
+        //Check if user isAdmin
+        String UserID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        Model.instance.getUserById(UserID, new Model.GetUserByIdListener() {
+            @Override
+            public void onComplete(User user) {
+
+                if (user.isAdmin() == true) {
+                    deleteBtn.setVisibility(View.VISIBLE);
+                } else {
+                    deleteBtn.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        deleteBtn.setOnClickListener(v -> delete());
 
         RecyclerView list = view.findViewById(R.id.restaurantreviews);
         list.setHasFixedSize(true);
@@ -106,6 +130,14 @@ public class RestaurantReviewsFragment extends Fragment {
 
         });
         return view;
+    }
+
+    private void delete() {
+        deleteBtn.setEnabled(false);
+
+        Model.instance.deleteRestaurant(_restaurant, () -> {
+            Navigation.findNavController(deleteBtn).navigateUp();
+        });
     }
 
     private void refresh() {
