@@ -57,7 +57,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        liveData = viewModel.getData();
+        liveData = viewModel.getData("");
 
         return view;
     }
