@@ -14,6 +14,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -95,6 +96,10 @@ public class ModelFirebase {
         void onComplete(List<Restaurant> list);
     }
 
+    public interface GetAllRestaurantsByTypesListener {
+        void onComplete(List<Restaurant> list, ArrayList<String> types);
+    }
+
     public interface GetAllRestaurantsReviewsListener {
         void onComplete(List<Review> list);
     }
@@ -119,6 +124,24 @@ public class ModelFirebase {
                     listener.onComplete(list);
                 });
     }
+
+    public void getAllRestaurantsByTypes(Long lastUpdateDate, ArrayList<String> types, GetAllRestaurantsByTypesListener listener) {
+        db.collection(Restaurant.COLLECTION_NAME)
+                .whereGreaterThanOrEqualTo("updateDate", new Timestamp(lastUpdateDate, 0))
+                .get()
+                .addOnCompleteListener(task -> {
+                    List<Restaurant> list = new LinkedList<>();
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot doc : task.getResult()) {
+                            Restaurant restaurant = Restaurant.create(doc.getData());
+                            list.add(restaurant);
+
+                        }
+                    }
+                    listener.onComplete(list, types);
+                });
+    }
+
 
     public void getAllRestaurantReviews(Long lastUpdateDate, GetAllRestaurantsReviewsListener listener) {
         db.collection(Review.COLLECTION_NAME)
