@@ -199,6 +199,8 @@ public class AddReviewFragment extends Fragment {
                     } else {
                         Navigation.findNavController(descEt).navigateUp();
                     }
+                } else {
+                    Navigation.findNavController(descEt).navigateUp();
                 }
             });
         }
