@@ -35,15 +35,9 @@ public class RestaurantTypesFragment extends Fragment {
 
     ArrayList<RestaurantType> filters;
 
-    private RestaurantListRvViewModel restaurantListRvViewModel;
-
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
-        restaurantListRvViewModel = new ViewModelProvider(requireActivity()).get(RestaurantListRvViewModel.class);
         filters = new ArrayList<RestaurantType>();
-//        restaurantListRvViewModel.getFilters().observe(getViewLifecycleOwner(), set -> {
-            // Update the selected filters UI
-//        });
     }
 
     public void updateFilter(RestaurantType filter) {
@@ -119,7 +113,6 @@ public class RestaurantTypesFragment extends Fragment {
         }
 
         return sb.toString();
-
     }
 
     private void confirm(View v) {
@@ -131,7 +124,10 @@ public class RestaurantTypesFragment extends Fragment {
 
         String[] types = restaurantTypes.toArray(new String[restaurantTypes.size()]);
 
-        Navigation.findNavController(v).navigate(RestaurantTypesFragmentDirections.actionRestaurantTypesFragmentToRestaurantListRvFragment(join(",", types)));
+        Navigation.
+                findNavController(v).
+                navigate(RestaurantTypesFragmentDirections.
+                        actionRestaurantTypesFragmentToRestaurantListRvFragment(join(",", types)));
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {
@@ -154,7 +150,6 @@ public class RestaurantTypesFragment extends Fragment {
             });
 
             checkbox.setOnClickListener(v -> {
-//                checkbox.setChecked(!checkbox.isChecked());
                 _restaurantType.setChecked(checkbox.isChecked());
                 listener.onItemClick(v, _restaurantType);
             });
