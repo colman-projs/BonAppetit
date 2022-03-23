@@ -53,6 +53,7 @@ public class AddRestaurantFragment extends Fragment {
     EditText latitudeEt;
     EditText longitudeEt;
     Button saveBtn;
+    Button cancelBtn;
     ProgressBar progressBar;
     Bitmap imageBitmap;
     ImageButton camBtn;
@@ -81,6 +82,7 @@ public class AddRestaurantFragment extends Fragment {
         latitudeEt = view.findViewById(R.id.main_lat_et);
         longitudeEt = view.findViewById(R.id.main_lng_et);
         saveBtn = view.findViewById(R.id.main_save_btn);
+        cancelBtn = view.findViewById(R.id.main_cancel_btn);
         progressBar = view.findViewById(R.id.main_progressbar);
         progressBar.setVisibility(View.GONE);
         imageImv = view.findViewById(R.id.main_image_imv);
@@ -88,6 +90,9 @@ public class AddRestaurantFragment extends Fragment {
 
 
         saveBtn.setOnClickListener(v -> save());
+        cancelBtn.setOnClickListener(v -> {
+            Navigation.findNavController(nameEt).navigateUp();
+        });
 
         camBtn = view.findViewById(R.id.main_cam_btn);
         galleryBtn = view.findViewById(R.id.main_gallery_btn);

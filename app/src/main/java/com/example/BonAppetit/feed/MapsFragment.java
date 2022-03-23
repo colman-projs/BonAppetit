@@ -130,9 +130,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
          */
         for (Restaurant restaurant : restaurants) {
             LatLng latLng = new LatLng(restaurant.getLatitude(), restaurant.getLongitude());
+            String snippet = restaurant.getDescription() + " (" + restaurant.getAvgRate().floatValue() + ")";
             map.addMarker(new MarkerOptions().position(latLng)
                     .title(restaurant.getName())
-                    .snippet(restaurant.getDescription()))
+                    .snippet(snippet))
                     .setTag(restaurant.getId());
         }
     }

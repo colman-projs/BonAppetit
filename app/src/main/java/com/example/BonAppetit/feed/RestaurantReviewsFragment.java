@@ -22,7 +22,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.example.BonAppetit.MyApplication;
 import com.example.BonAppetit.R;
 import com.example.BonAppetit.model.Model;
 import com.example.BonAppetit.model.Restaurant;
@@ -41,6 +40,8 @@ public class RestaurantReviewsFragment extends Fragment {
     String restaurantId;
     ImageView restaurantImageImv;
     TextView restaurantNameTv;
+    RatingBar resRateRb;
+    TextView restaurantDescTv;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -58,6 +59,8 @@ public class RestaurantReviewsFragment extends Fragment {
 
         restaurantImageImv = view.findViewById(R.id.restaurant_detail_image_img);
         restaurantNameTv = view.findViewById(R.id.restaurant_detail_name_tv);
+        resRateRb = view.findViewById(R.id.restaurant_detail_rate_bar);
+        restaurantDescTv = view.findViewById(R.id.restaurant_detail_desc_tv);
 
         swipeRefresh = view.findViewById(R.id.restaurantreviews_swiperefresh);
         swipeRefresh.setOnRefreshListener(() -> Model.instance.refreshRestaurantReviews(restaurantId));
@@ -66,6 +69,8 @@ public class RestaurantReviewsFragment extends Fragment {
             @Override
             public void onComplete(Restaurant restaurant) {
                 restaurantNameTv.setText(restaurant.getName());
+                resRateRb.setRating(restaurant.getAvgRate().floatValue());
+                restaurantDescTv.setText(restaurant.getDescription());
                 if (restaurant.getImageUrl() != null) {
                     Picasso.get().load(restaurant.getImageUrl()).into(restaurantImageImv);
                 }
