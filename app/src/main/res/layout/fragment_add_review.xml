@@ -61,16 +61,6 @@
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/main_cancel_btn"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:text="CANCEL"
-            app:layout_constraintBaseline_toBaselineOf="@+id/main_save_btn"
-            app:layout_constraintEnd_toStartOf="@+id/main_save_btn" />
-
-        <com.google.android.material.button.MaterialButton
             android:id="@+id/main_save_btn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
