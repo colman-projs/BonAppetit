@@ -1,4 +1,4 @@
-package com.example.BonAppetit.login;
+package com.example.BonAppetit.fragments;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
@@ -22,7 +22,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import com.example.BonAppetit.R;
-import com.example.BonAppetit.feed.BaseActivity;
+import com.example.BonAppetit.BaseActivity;
 import com.example.BonAppetit.model.Model;
 import com.example.BonAppetit.model.User;
 import com.google.firebase.auth.FirebaseAuth;

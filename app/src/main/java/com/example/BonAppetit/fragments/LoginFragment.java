@@ -1,13 +1,9 @@
-package com.example.BonAppetit.login;
+package com.example.BonAppetit.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import android.util.Patterns;
@@ -19,10 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.BonAppetit.R;
-import com.example.BonAppetit.feed.BaseActivity;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
+import com.example.BonAppetit.BaseActivity;
 import com.google.firebase.auth.FirebaseAuth;
 
 

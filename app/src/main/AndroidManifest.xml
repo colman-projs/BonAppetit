@@ -18,7 +18,7 @@
             android:value="AIzaSyA01qL5_frCoK12gKomFxVKW9qgFt3A2k4" />
 
         <activity
-            android:name=".feed.BaseActivity"
+            android:name=".BaseActivity"
             android:exported="true"
             android:theme="@style/Theme.BonAppetit">
 

@@ -1,4 +1,4 @@
-package com.example.BonAppetit.common;
+package com.example.BonAppetit.fragments;
 
 import android.os.Bundle;
 

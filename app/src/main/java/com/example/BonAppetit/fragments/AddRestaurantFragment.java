@@ -1,4 +1,4 @@
-package com.example.BonAppetit.feed;
+package com.example.BonAppetit.fragments;
 
 import android.app.Activity;
 import android.content.Context;
@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,27 +21,20 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.BonAppetit.R;
+import com.example.BonAppetit.viewmodel.RestaurantListRvViewModel;
+import com.example.BonAppetit.viewmodel.RestaurantTypesViewModel;
 import com.example.BonAppetit.model.Model;
 import com.example.BonAppetit.model.Restaurant;
 import com.example.BonAppetit.model.RestaurantType;
-import com.example.BonAppetit.model.User;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.auth.FirebaseAuth;
-import com.squareup.picasso.Picasso;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class AddRestaurantFragment extends Fragment {
     private static final int REQUEST_CAMERA = 1;

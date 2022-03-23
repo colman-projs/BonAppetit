@@ -1,4 +1,4 @@
-package com.example.BonAppetit.feed;
+package com.example.BonAppetit;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;

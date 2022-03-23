@@ -1,4 +1,4 @@
-package com.example.BonAppetit.feed;
+package com.example.BonAppetit.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -20,12 +20,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.BonAppetit.R;
+import com.example.BonAppetit.viewmodel.RestaurantTypesViewModel;
 import com.example.BonAppetit.model.Model;
 import com.example.BonAppetit.model.RestaurantType;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 
 public class RestaurantTypesFragment extends Fragment {
     RestaurantTypesViewModel viewModel;

@@ -1,4 +1,4 @@
-package com.example.BonAppetit.feed;
+package com.example.BonAppetit.fragments;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -62,7 +62,6 @@ public class AddReviewFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         restaurantId = AddReviewFragmentArgs.fromBundle(getArguments()).getRestaurantId();
-        Log.d("TAG", "ADD review to " + restaurantId);
         Model.instance.getRestaurantById(restaurantId, restaurant -> {
             this.restaurant = restaurant;
         });

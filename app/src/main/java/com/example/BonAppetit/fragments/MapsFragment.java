@@ -1,4 +1,4 @@
-package com.example.BonAppetit.feed;
+package com.example.BonAppetit.fragments;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 
 import com.example.BonAppetit.R;
 
+import com.example.BonAppetit.viewmodel.RestaurantListRvViewModel;
 import com.example.BonAppetit.model.Restaurant;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;

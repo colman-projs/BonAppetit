@@ -1,4 +1,4 @@
-package com.example.BonAppetit.feed;
+package com.example.BonAppetit.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.BonAppetit.R;
+import com.example.BonAppetit.viewmodel.RestaurantListRvViewModel;
 import com.example.BonAppetit.model.Model;
 import com.example.BonAppetit.model.Restaurant;
 import com.example.BonAppetit.model.RestaurantType;
@@ -50,9 +51,7 @@ public class RestaurantListRvFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_restaurants_list, container, false);
 
-//        restaurantTypes = RestaurantListRvFragmentArgs.fromBundle(getArguments()).getTypeFilters();
         restaurantTypes = Model.instance.getFilters();
-        //Log.d("Types filter: ", restaurantTypes);
 
         ArrayList<String> restaurantTypes1 = new ArrayList<>();
 
@@ -213,10 +212,8 @@ public class RestaurantListRvFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.addRestaurantFragment) {
-            Log.d("TAG", "ADD Restaurant");
             return true;
         } else if (item.getItemId() == R.id.addReviewFragment1) {
-            Log.d("TAG", "ADD Review");
             return true;
         } else {
             return super.onOptionsItemSelected(item);

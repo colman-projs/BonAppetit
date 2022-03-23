@@ -1,4 +1,4 @@
-package com.example.BonAppetit.feed;
+package com.example.BonAppetit.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.BonAppetit.R;
+import com.example.BonAppetit.viewmodel.RestaurantReviewsViewModel;
 import com.example.BonAppetit.model.Model;
 import com.example.BonAppetit.model.Restaurant;
 import com.example.BonAppetit.model.Review;
@@ -239,14 +240,12 @@ public class RestaurantReviewsFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.addRestaurantFragment) {
-            Log.d("TAG", "ADD...");
             return true;
         } else if (item.getItemId() == R.id.addReviewFragment1) {
             String restaurantId = viewModel.getRestaurantId();
 
             Navigation.findNavController(this.getView()).navigate(RestaurantReviewsFragmentDirections.actionRestaurantReviewsFragmentToAddReviewFragment(restaurantId));
 
-            Log.d("TAG", "ADD...");
             return true;
         } else {
             return super.onOptionsItemSelected(item);

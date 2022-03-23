@@ -7,7 +7,7 @@
     app:startDestination="@id/introFragment">
     <fragment
         android:id="@+id/restaurantListRvFragment"
-        android:name="com.example.BonAppetit.feed.RestaurantListRvFragment"
+        android:name="com.example.BonAppetit.fragments.RestaurantListRvFragment"
         android:label="Restaurants List"
         tools:layout="@layout/fragment_restaurants_list">
         <!--        Navigation To Restaurant Reviews-->
@@ -26,7 +26,7 @@
     </fragment>
     <fragment
         android:id="@+id/aboutFragment"
-        android:name="com.example.BonAppetit.common.AboutFragment"
+        android:name="com.example.BonAppetit.fragments.AboutFragment"
         android:label="About"
         tools:layout="@layout/fragment_about" />
     <action
@@ -36,7 +36,7 @@
     <!--    Add Review-->
     <fragment
         android:id="@+id/addReviewFragment"
-        android:name="com.example.BonAppetit.feed.AddReviewFragment"
+        android:name="com.example.BonAppetit.fragments.AddReviewFragment"
         android:label="Add New Review"
         tools:layout="@layout/fragment_add_review">
         <argument
@@ -47,7 +47,7 @@
     <!--   Map-->
     <fragment
         android:id="@+id/MapFragment"
-        android:name="com.example.BonAppetit.feed.MapsFragment"
+        android:name="com.example.BonAppetit.fragments.MapsFragment"
         android:label="Restaurants Map"
         tools:layout="@layout/fragment_maps">
         <action
@@ -61,7 +61,7 @@
     <!--    Restaurnt Types -->
     <fragment
         android:id="@+id/RestaurantTypesFragment"
-        android:name="com.example.BonAppetit.feed.RestaurantTypesFragment"
+        android:name="com.example.BonAppetit.fragments.RestaurantTypesFragment"
         android:label="Types Filter"
         tools:layout="@layout/fragment_restaurants_types" >
         <action
@@ -77,7 +77,7 @@
     <!--    Add restaurant-->
     <fragment
         android:id="@+id/addRestaurantFragment"
-        android:name="com.example.BonAppetit.feed.AddRestaurantFragment"
+        android:name="com.example.BonAppetit.fragments.AddRestaurantFragment"
         android:label="Add New Restaurant"
         tools:layout="@layout/fragment_add_restaurant" />
     <action
@@ -87,7 +87,7 @@
     <!--  Restaurant Reviews-->
     <fragment
         android:id="@+id/RestaurantReviewsFragment"
-        android:name="com.example.BonAppetit.feed.RestaurantReviewsFragment"
+        android:name="com.example.BonAppetit.fragments.RestaurantReviewsFragment"
         android:label="Restaurant Reviews"
         tools:layout="@layout/fragment_restaurant_reviews">
         <argument
@@ -101,7 +101,7 @@
     <!--    Login -->
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.example.BonAppetit.login.LoginFragment"
+        android:name="com.example.BonAppetit.fragments.LoginFragment"
         android:label="Login"
         tools:layout="@layout/fragment_login">
         <action
@@ -121,7 +121,7 @@
     <!--    Register-->
     <fragment
         android:id="@+id/registerFragment"
-        android:name="com.example.BonAppetit.login.RegisterFragment"
+        android:name="com.example.BonAppetit.fragments.RegisterFragment"
         android:label="Registration"
         tools:layout="@layout/fragment_register">
         <argument
@@ -140,7 +140,7 @@
     </fragment>
     <fragment
         android:id="@+id/introFragment"
-        android:name="com.example.BonAppetit.IntroFragment"
+        android:name="com.example.BonAppetit.fragments.IntroFragment"
         android:label="fragment_intro"
         tools:layout="@layout/fragment_intro">
         <action

@@ -32,7 +32,6 @@ public class Model {
         // add all records to the local db
         executor.execute(() -> {
             Long lud = Long.valueOf(0);
-            Log.d("TAG", "restaurants returned " + list.size());
             for (Restaurant restaurant : list) {
                 if (restaurant.isDeleted()) {
                     AppLocalDb.db.restaurantDao().delete(restaurant);
@@ -61,7 +60,6 @@ public class Model {
         // add all records to the local db
         executor.execute(() -> {
             Long lud = Long.valueOf(0);
-            Log.d("TAG", "restaurants returned " + list.size());
             for (Restaurant restaurant : list) {
                 if (restaurant.isDeleted()) {
                     AppLocalDb.db.restaurantDao().delete(restaurant);
@@ -97,7 +95,6 @@ public class Model {
         // add all records to the local db
         executor.execute(() -> {
             Long lud = Long.valueOf(0);
-            Log.d("TAG", "types returned " + list.size());
             for (RestaurantType restaurantType : list) {
                 if (restaurantType.isDeleted()) {
                     AppLocalDb.db.restaurantTypeDao().delete(restaurantType);
@@ -126,7 +123,6 @@ public class Model {
 // add all records to the local db
         executor.execute(() -> {
             Long lud = Long.valueOf(0);
-            Log.d("TAG", "reviews returned " + list.size());
             for (Review review : list) {
                 if (review.isDeleted()) {
                     AppLocalDb.db.reviewDao().delete(review);
@@ -155,7 +151,6 @@ public class Model {
         // add all records to the local db
         executor.execute(() -> {
             Long lud = Long.valueOf(0);
-            Log.d("TAG", "reviews by restaurant returned " + list.size());
             for (Review review : list) {
                 if (review.isDeleted()) {
                     AppLocalDb.db.reviewDao().delete(review);

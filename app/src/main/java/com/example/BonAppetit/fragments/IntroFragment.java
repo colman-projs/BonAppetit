@@ -1,4 +1,4 @@
-package com.example.BonAppetit;
+package com.example.BonAppetit.fragments;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.BonAppetit.R;
 import com.example.BonAppetit.model.Model;
 
 public class IntroFragment extends Fragment {
