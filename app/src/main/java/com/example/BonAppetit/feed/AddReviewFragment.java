@@ -42,7 +42,6 @@ public class AddReviewFragment extends Fragment {
     RatingBar rateRb;
 
     Button saveBtn;
-    Button cancelBtn;
     ProgressBar progressBar;
     Bitmap imageBitmap;
     ImageButton camBtn;
@@ -64,7 +63,6 @@ public class AddReviewFragment extends Fragment {
         descEt = view.findViewById(R.id.review_description_et);
         rateRb = view.findViewById(R.id.add_review_rate_bar);
         saveBtn = view.findViewById(R.id.main_save_btn);
-        cancelBtn = view.findViewById(R.id.main_cancel_btn);
         progressBar = view.findViewById(R.id.main_progressbar);
 
         progressBar.setVisibility(View.VISIBLE);
@@ -129,7 +127,6 @@ public class AddReviewFragment extends Fragment {
     private void save() {
         progressBar.setVisibility(View.VISIBLE);
         saveBtn.setEnabled(false);
-        cancelBtn.setEnabled(false);
         camBtn.setEnabled(false);
         galleryBtn.setEnabled(false);
 
