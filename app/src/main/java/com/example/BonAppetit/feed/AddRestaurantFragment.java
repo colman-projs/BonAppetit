@@ -86,7 +86,6 @@ public class AddRestaurantFragment extends Fragment {
         progressBar = view.findViewById(R.id.main_progressbar);
         progressBar.setVisibility(View.GONE);
         imageImv = view.findViewById(R.id.main_image_imv);
-        spinner = (Spinner)view.findViewById(R.id.spinner);
 
 
         saveBtn.setOnClickListener(v -> save());
@@ -101,30 +100,6 @@ public class AddRestaurantFragment extends Fragment {
 
         galleryBtn.setOnClickListener(v -> openGallery());
 
-
-        //Get ALL types
-        progressBar.setVisibility(View.VISIBLE);
-        Model.instance.getAllTypes().observe(getViewLifecycleOwner(), list -> {
-
-            restaurantTypes = list.toArray(new RestaurantType[list.size()]);
-
-            for (RestaurantType restaurant: restaurantTypes) {
-                hmLang.put((String) restaurant.getId(), restaurant.getName());
-            }
-//
-//            adapter = new LinkedHashMapAdapter<String, String>(this, android.R.layout.simple_spinner_item, hmLang);
-//            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//            spinner.setAdapter(adapter);
-
-
-            progressBar.setVisibility(View.GONE);
-        });
-
-
-
-
-        spinner.setOnItemSelectedListener(this.spinner.getOnItemSelectedListener());
         return view;
     }
 
