@@ -227,8 +227,8 @@ public class Model {
 
     public LiveData<List<Restaurant>> getAll() {
         if (restaurantList.getValue() == null) {
-            refreshRestaurantList();
-        }
+        refreshRestaurantList();
+    }
 
         return restaurantList;
     }
@@ -445,4 +445,23 @@ public class Model {
     public boolean isSignedIn() {
         return modelFirebase.isSignedIn();
     }
+
+    /**
+     * Authentication
+     */
+    ArrayList<RestaurantType> filters =  new ArrayList<RestaurantType>();
+
+    public void updateFilter(RestaurantType filter) {
+        if (filter.isChecked()) {
+            filters.add(filter);
+        } else {
+            filters.remove(filter);
+        }
+    }
+
+    public ArrayList<RestaurantType> getFilters(){ return filters;}
+
+
+
+
 }

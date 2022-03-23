@@ -33,20 +33,20 @@ public class RestaurantTypesFragment extends Fragment {
     SwipeRefreshLayout swipeRefresh;
     Button confirmButton;
 
-    ArrayList<RestaurantType> filters;
+    ArrayList<RestaurantType> filters =  new ArrayList<RestaurantType>();;
 
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
-        filters = new ArrayList<RestaurantType>();
+
     }
 
-    public void updateFilter(RestaurantType filter) {
-        if (filter.isChecked()) {
-            filters.add(filter);
-        } else {
-            filters.remove(filter);
-        }
-    }
+//    public void updateFilter(RestaurantType filter) {
+//        if (filter.isChecked()) {
+//            filters.add(filter);
+//        } else {
+//            filters.remove(filter);
+//        }
+//    }
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -74,7 +74,7 @@ public class RestaurantTypesFragment extends Fragment {
         list.setAdapter(adapter);
 
         adapter.setOnItemClickListener((v, filter) -> {
-            updateFilter(filter);
+            Model.instance.updateFilter(filter);
         });
 
         setHasOptionsMenu(true);
