@@ -24,15 +24,19 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.BonAppetit.R;
 import com.example.BonAppetit.model.Model;
 import com.example.BonAppetit.model.Restaurant;
+import com.example.BonAppetit.model.RestaurantType;
 import com.example.BonAppetit.model.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
 
 public class RestaurantListRvFragment extends Fragment {
     RestaurantListRvViewModel viewModel;
     MyAdapter adapter;
     SwipeRefreshLayout swipeRefresh;
-    String restaurantTypes;
+    ArrayList<RestaurantType> restaurantTypes;
+    String resturantTypeIds;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -45,8 +49,19 @@ public class RestaurantListRvFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_restaurants_list, container, false);
 
-        restaurantTypes = RestaurantListRvFragmentArgs.fromBundle(getArguments()).getTypeFilters();
-        Log.d("Types filter: ", restaurantTypes);
+//        restaurantTypes = RestaurantListRvFragmentArgs.fromBundle(getArguments()).getTypeFilters();
+        restaurantTypes = Model.instance.getFilters();
+        //Log.d("Types filter: ", restaurantTypes);
+
+        ArrayList<String> restaurantTypes1 = new ArrayList<>();
+
+        for (RestaurantType type : restaurantTypes) {
+            restaurantTypes1.add(type.getId());
+        }
+
+        String[] types = restaurantTypes1.toArray(new String[restaurantTypes1.size()]);
+
+        resturantTypeIds = join("," , types);
 
         swipeRefresh = view.findViewById(R.id.restaurantlist_swiperefresh);
         swipeRefresh.setOnRefreshListener(() -> Model.instance.refreshRestaurantList());
@@ -60,14 +75,14 @@ public class RestaurantListRvFragment extends Fragment {
         list.setAdapter(adapter);
 
         adapter.setOnItemClickListener((v, position) -> {
-            String stId = viewModel.getData(restaurantTypes).getValue().get(position).getId();
+            String stId = viewModel.getData(resturantTypeIds).getValue().get(position).getId();
             Navigation
                     .findNavController(v)
                     .navigate(RestaurantListRvFragmentDirections.actionRestaurantListRvFragmentToRestaurantReviewsFragment(stId));
         });
 
         setHasOptionsMenu(true);
-        viewModel.getData(restaurantTypes).observe(getViewLifecycleOwner(), list1 -> refresh());
+        viewModel.getData(resturantTypeIds).observe(getViewLifecycleOwner(), list1 -> refresh());
         swipeRefresh.setRefreshing(Model.instance.getListLoadingState().getValue() == Model.LoadingStates.loading);
         Model.instance.getListLoadingState().observe(getViewLifecycleOwner(), loadingState -> {
             if (loadingState == Model.LoadingStates.loading) {
@@ -79,6 +94,26 @@ public class RestaurantListRvFragment extends Fragment {
         });
 
         return view;
+    }
+
+    private static String join(String separator, String[] input) {
+
+        if (input == null || input.length <= 0) return "";
+
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < input.length; i++) {
+
+            sb.append(input[i]);
+
+            // if not the last item
+            if (i != input.length - 1) {
+                sb.append(separator);
+            }
+
+        }
+
+        return sb.toString();
     }
 
     private void refresh() {
@@ -139,16 +174,16 @@ public class RestaurantListRvFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-            Restaurant restaurant = viewModel.getData(restaurantTypes).getValue().get(position);
+            Restaurant restaurant = viewModel.getData(resturantTypeIds).getValue().get(position);
             holder.bind(restaurant);
         }
 
         @Override
         public int getItemCount() {
-            if (viewModel.getData(restaurantTypes).getValue() == null) {
+            if (viewModel.getData(resturantTypeIds).getValue() == null) {
                 return 0;
             }
-            return viewModel.getData(restaurantTypes).getValue().size();
+            return viewModel.getData(resturantTypeIds).getValue().size();
         }
     }
 

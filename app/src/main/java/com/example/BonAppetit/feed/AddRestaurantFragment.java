@@ -101,15 +101,12 @@ public class AddRestaurantFragment extends Fragment {
         progressBar.setVisibility(View.VISIBLE);
         Model.instance.getAllTypes().observe(getViewLifecycleOwner(), list -> {
 
-//            paths = ((MutableLiveData<List<RestaurantType>>) list).getValue().toArray(new RestaurantType[list.size()]);
-
             restaurantTypes = list.toArray(new RestaurantType[list.size()]);
 
             for (RestaurantType restaurant: restaurantTypes) {
                 hmLang.put((String) restaurant.getId(), restaurant.getName());
             }
-
-
+//
 //            adapter = new LinkedHashMapAdapter<String, String>(this, android.R.layout.simple_spinner_item, hmLang);
 //            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 //            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -118,13 +115,6 @@ public class AddRestaurantFragment extends Fragment {
 
             progressBar.setVisibility(View.GONE);
         });
-
-
-
-
-
-
-
 
 
 
@@ -148,6 +138,7 @@ public class AddRestaurantFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if(data == null){ return;}
         if (requestCode == REQUEST_CAMERA) {
             if (resultCode == Activity.RESULT_OK) {
                 Bundle extras = data.getExtras();
