@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -89,12 +90,14 @@ public class RestaurantListRvFragment extends Fragment {
         ImageView imageImv;
         TextView nameTv;
         TextView descTv;
+        RatingBar rateRb;
 
         public MyViewHolder(@NonNull View itemView, OnItemClickListener listener) {
             super(itemView);
             nameTv = itemView.findViewById(R.id.listrow_name_tv);
             descTv = itemView.findViewById(R.id.listrow_desc_tv);
             imageImv = itemView.findViewById(R.id.restaurant_listrow_image_imv);
+            rateRb = itemView.findViewById(R.id.restaurant_listrow_rate_bar);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -108,6 +111,7 @@ public class RestaurantListRvFragment extends Fragment {
         void bind(Restaurant restaurant) {
             nameTv.setText(restaurant.getName());
             descTv.setText(restaurant.getDescription());
+            rateRb.setRating(restaurant.getAvgRate().floatValue());
             imageImv.setImageResource(R.mipmap.food_placeholder);
             if (restaurant.getImageUrl() != null) {
                 Picasso.get()
