@@ -97,7 +97,7 @@ public class RestaurantType {
         String imageUrl = (String)json.get("imageUrl");
         boolean deleted = (boolean)json.get("deleted");
         Timestamp ts = (Timestamp)json.get("updateDate");
-        Long updateDate = ts.getSeconds();
+        Long updateDate = ts == null ? 0 : ts.getSeconds();
 
         RestaurantType restaurantType = new RestaurantType(name);
         restaurantType.setId(id);

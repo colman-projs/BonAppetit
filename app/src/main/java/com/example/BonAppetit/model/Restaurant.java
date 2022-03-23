@@ -159,7 +159,7 @@ public class Restaurant {
         int reviewsCount = json.get("reviewsCount") == null ? 0 : ((Long)json.get("reviewsCount")).intValue();
         boolean deleted = (boolean)json.get("deleted");
         Timestamp ts = (Timestamp)json.get("updateDate");
-        Long updateDate = ts.getSeconds();
+        Long updateDate = ts == null ? 0 : ts.getSeconds();
 
         Restaurant restaurant = new Restaurant(name, restaurantTypeId, description, avgRate, latitude, longitude);
         restaurant.setId(id);
