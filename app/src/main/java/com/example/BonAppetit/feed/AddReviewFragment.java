@@ -89,6 +89,7 @@ public class AddReviewFragment extends Fragment {
                             .into(imageImv);
                 }
 
+                deleteBtn.setVisibility(View.VISIBLE);
             } else {
                 deleteBtn.setVisibility(View.GONE);
             }

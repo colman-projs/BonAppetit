@@ -212,6 +212,16 @@ public class ModelFirebase {
                 .addOnFailureListener(e -> listener.onComplete());
     }
 
+    public void deleteRestaurant(Restaurant restaurant, Model.AddListener listener) {
+        restaurant.setDeleted(true);
+        Map<String, Object> json = restaurant.toJson();
+        db.collection(Restaurant.COLLECTION_NAME)
+                .document(restaurant.getId())
+                .set(json)
+                .addOnSuccessListener(unused -> listener.onComplete())
+                .addOnFailureListener(e -> listener.onComplete());
+    }
+
     public void deleteReview(Review review, Model.AddListener listener) {
         review.setDeleted(true);
         Map<String, Object> json = review.toJson();

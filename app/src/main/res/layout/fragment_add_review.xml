@@ -76,6 +76,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:text="DELETE"
+            android:visibility="invisible"
             app:backgroundTint="@color/design_default_color_error"
             app:layout_constraintBaseline_toBaselineOf="@+id/main_save_btn"
             app:layout_constraintStart_toStartOf="parent" />
