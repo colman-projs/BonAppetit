@@ -26,6 +26,7 @@ import com.example.BonAppetit.feed.BaseActivity;
 import com.example.BonAppetit.model.Model;
 import com.example.BonAppetit.model.User;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
 
@@ -67,6 +68,7 @@ public class RegisterFragment extends Fragment {
             ((BaseActivity) getActivity()).getSupportActionBar().setTitle(R.string.update);
             registerButton.setText(R.string.update);
             password.setVisibility(View.INVISIBLE);
+            email.setVisibility(View.INVISIBLE);
             loadUserData();
         }
 
@@ -79,7 +81,6 @@ public class RegisterFragment extends Fragment {
         Model.instance.getUserById(mAuth.getCurrentUser().getUid(), (user -> {
             firstName.setText(user.getFirstName());
             lastName.setText(user.getLastName());
-            email.setText(user.getMail());
 
             Picasso.get().load(user.getAvatarUrl()).into(userPicture);
 
@@ -133,8 +134,11 @@ public class RegisterFragment extends Fragment {
                 });
             } else {
                 ((BaseActivity) getActivity()).setLoading(false);
-
-                Toast.makeText(getContext(), "Failed to register, please try again later", Toast.LENGTH_SHORT).show();
+                if (task.getException() instanceof FirebaseAuthUserCollisionException){
+                    Toast.makeText(getContext(), "An account with this email address already exists", Toast.LENGTH_LONG).show();
+                }else{
+                    Toast.makeText(getContext(), "Failed to register, please try again later", Toast.LENGTH_LONG).show();
+                }
             }
         });
     }
