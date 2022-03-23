@@ -32,7 +32,6 @@ public class RestaurantListRvFragment extends Fragment {
     RestaurantListRvViewModel viewModel;
     MyAdapter adapter;
     SwipeRefreshLayout swipeRefresh;
-
     String restaurantTypes;
 
     @Override
@@ -44,9 +43,10 @@ public class RestaurantListRvFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_restaurants_list,container,false);
+        View view = inflater.inflate(R.layout.fragment_restaurants_list, container, false);
 
         restaurantTypes = RestaurantListRvFragmentArgs.fromBundle(getArguments()).getTypeFilters();
+        Log.d("Types filter: ", restaurantTypes);
 
         swipeRefresh = view.findViewById(R.id.restaurantlist_swiperefresh);
         swipeRefresh.setOnRefreshListener(() -> Model.instance.refreshRestaurantList());
@@ -60,23 +60,24 @@ public class RestaurantListRvFragment extends Fragment {
         list.setAdapter(adapter);
 
         adapter.setOnItemClickListener((v, position) -> {
-            String stId = viewModel.getData().getValue().get(position).getId();
+            String stId = viewModel.getData(restaurantTypes).getValue().get(position).getId();
             Navigation
                     .findNavController(v)
                     .navigate(RestaurantListRvFragmentDirections.actionRestaurantListRvFragmentToRestaurantReviewsFragment(stId));
         });
 
         setHasOptionsMenu(true);
-        viewModel.getData().observe(getViewLifecycleOwner(), list1 -> refresh());
+        viewModel.getData(restaurantTypes).observe(getViewLifecycleOwner(), list1 -> refresh());
         swipeRefresh.setRefreshing(Model.instance.getListLoadingState().getValue() == Model.LoadingStates.loading);
         Model.instance.getListLoadingState().observe(getViewLifecycleOwner(), loadingState -> {
-            if (loadingState == Model.LoadingStates.loading){
+            if (loadingState == Model.LoadingStates.loading) {
                 swipeRefresh.setRefreshing(true);
-            }else{
+            } else {
                 swipeRefresh.setRefreshing(false);
             }
 
         });
+
         return view;
     }
 
@@ -84,7 +85,7 @@ public class RestaurantListRvFragment extends Fragment {
         adapter.notifyDataSetChanged();
     }
 
-    class MyViewHolder extends RecyclerView.ViewHolder{
+    class MyViewHolder extends RecyclerView.ViewHolder {
         ImageView imageImv;
         TextView nameTv;
         TextView descTv;
@@ -99,12 +100,12 @@ public class RestaurantListRvFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     int pos = getAdapterPosition();
-                    listener.onItemClick(v,pos);
+                    listener.onItemClick(v, pos);
                 }
             });
         }
 
-        void bind(Restaurant restaurant){
+        void bind(Restaurant restaurant) {
             nameTv.setText(restaurant.getName());
             descTv.setText(restaurant.getDescription());
             imageImv.setImageResource(R.mipmap.food_placeholder);
@@ -116,36 +117,38 @@ public class RestaurantListRvFragment extends Fragment {
         }
     }
 
-    interface OnItemClickListener{
-        void onItemClick(View v,int position);
+    interface OnItemClickListener {
+        void onItemClick(View v, int position);
     }
-    class MyAdapter extends RecyclerView.Adapter<MyViewHolder>{
+
+    class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
 
         OnItemClickListener listener;
-        public void setOnItemClickListener(OnItemClickListener listener){
+
+        public void setOnItemClickListener(OnItemClickListener listener) {
             this.listener = listener;
         }
 
         @NonNull
         @Override
         public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = getLayoutInflater().inflate(R.layout.restaurant_list_row,parent,false);
-            MyViewHolder holder = new MyViewHolder(view,listener);
+            View view = getLayoutInflater().inflate(R.layout.restaurant_list_row, parent, false);
+            MyViewHolder holder = new MyViewHolder(view, listener);
             return holder;
         }
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-            Restaurant restaurant = viewModel.getData().getValue().get(position);
+            Restaurant restaurant = viewModel.getData(restaurantTypes).getValue().get(position);
             holder.bind(restaurant);
         }
 
         @Override
         public int getItemCount() {
-            if(viewModel.getData().getValue() == null){
+            if (viewModel.getData(restaurantTypes).getValue() == null) {
                 return 0;
             }
-            return viewModel.getData().getValue().size();
+            return viewModel.getData(restaurantTypes).getValue().size();
         }
     }
 
@@ -159,26 +162,22 @@ public class RestaurantListRvFragment extends Fragment {
             @Override
             public void onComplete(User user) {
 
-                if (user.isAdmin() == true){
-                    inflater.inflate(R.menu.restaurant_list_menu_admin,menu);
+                if (user.isAdmin() == true) {
+                    inflater.inflate(R.menu.restaurant_list_menu_admin, menu);
                 } else {
-                    inflater.inflate(R.menu.restaurants_list_menu,menu);
+                    inflater.inflate(R.menu.restaurants_list_menu, menu);
                 }
-
-
             }
         });
-
-
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.addRestaurantFragment){
-            Log.d("TAG","ADD...");
+        if (item.getItemId() == R.id.addRestaurantFragment) {
+            Log.d("TAG", "ADD Restaurant");
             return true;
-        } else if (item.getItemId() == R.id.addReviewFragment1){
-            Log.d("TAG","ADD...");
+        } else if (item.getItemId() == R.id.addReviewFragment1) {
+            Log.d("TAG", "ADD Review");
             return true;
         } else {
             return super.onOptionsItemSelected(item);
